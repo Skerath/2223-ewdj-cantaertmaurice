@@ -1,7 +1,6 @@
 package validator;
 
 import domain.Book;
-import form.BookRegistrationForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -11,7 +10,7 @@ public class BookRegistrationValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return BookRegistrationForm.class.isAssignableFrom(clazz);
+        return Book.class.isAssignableFrom(clazz);
     }
 
     @Override
