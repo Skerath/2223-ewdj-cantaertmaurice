@@ -21,12 +21,41 @@
         <input type="number" th:field="*{priceInEuro}" size="15" placeholder="book name"/>
         <span th:if="${#fields.hasErrors('priceInEuro')}" th:errorclass="error" th:errors="*{priceInEuro}"></span>
     </p>
+    <div th:each="location, status : *{bookLocations}">
+        <p>
+            <label>Name:</label>
+            <input type="text" th:field="*{bookLocations[__${status.index}__].locationName}" />
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].locationName')}" th:errorclass="error" th:errors="*{bookLocations[__${status.index}__].locationName}"></span>
+        </p>
+        <p>
+            <label>Place Code 1:</label>
+            <input type="text" th:field="*{bookLocations[__${status.index}__].placeCode1}" />
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode1')}" th:errorclass="error" th:errors="*{bookLocations[__${status.index}__].placeCode1}" ></span>
+        </p>
+        <p>
+            <label>Place Code 2:</label>
+            <input type="text" th:field="*{bookLocations[__${status.index}__].placeCode2}" />
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode2')}" th:errorclass="error" th:errors="*{bookLocations[__${status.index}__].placeCode2}"></span>
+        </p>
+    </div>
+    <div th:each="author, status : *{authors}">
+        <p>
+            <label>Last Name:</label>
+            <input type="text" th:field="*{authors[__${status.index}__].lastName}" />
+            <span th:if="${#fields.hasErrors('authors[__${status.index}__].lastName')}" th:errorclass="error" th:errors="*{authors[__${status.index}__].lastName}"></span>
+        </p>
+        <p>
+            <label>First Name:</label>
+            <input type="text" th:field="*{authors[__${status.index}__].firstName}" />
+            <span th:if="${#fields.hasErrors('authors[__${status.index}__].firstName')}" th:errorclass="error" th:errors="*{authors[__${status.index}__].firstName}" ></span>
+        </p>
+    </div>
     <button type="submit">OK</button>
-        <div th:if="${#fields.hasErrors()}" class="error">
-            <ul>
-                <li th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
-            </ul>
-        </div>
+    <div th:if="${#fields.hasErrors()}" class="error">
+        <ul>
+            <li th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
+        </ul>
+    </div>
 </form>
 </body>
 </html>

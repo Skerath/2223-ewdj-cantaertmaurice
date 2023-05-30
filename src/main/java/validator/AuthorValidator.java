@@ -1,21 +1,20 @@
 package validator;
 
-import domain.Book;
-import lombok.extern.slf4j.Slf4j;
+import domain.Author;
+import jakarta.validation.Valid;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-@Slf4j
-public class BookRegistrationValidator implements Validator {
+public class AuthorValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Book.class.isAssignableFrom(clazz);
+        return Author.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        Book registration = (Book) target;
+        @Valid Author registration = (Author) target;
 
 //        double price = registration.getPrice();
 //        if (price <= 0 || price >= 100) {

@@ -6,28 +6,29 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.data.util.ProxyUtils;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Author {
+
+    public Author(List<Book> books) {
+        this.books = books;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "author_id", nullable = false)
     @ToString.Exclude
     private UUID authorId;
 
-    @NotEmpty
     @NotBlank
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @NotEmpty
     @NotBlank
     @Column(name = "last_name", nullable = false)
     private String lastName;
@@ -37,7 +38,7 @@ public class Author {
             joinColumns = @JoinColumn(name = "author_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
     @ToString.Exclude
-    private Set<Book> books = new LinkedHashSet<>();
+    private List<Book> books = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

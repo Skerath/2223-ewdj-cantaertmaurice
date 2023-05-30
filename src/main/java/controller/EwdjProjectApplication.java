@@ -7,7 +7,9 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import validator.BookRegistrationValidator;
+import validator.AuthorValidator;
+import validator.BookLocationValidator;
+import validator.BookValidator;
 
 import java.util.Locale;
 
@@ -31,8 +33,18 @@ public class EwdjProjectApplication implements WebMvcConfigurer {
     }
 
     @Bean
-    BookRegistrationValidator bookRegistrationValidator() {
-        return new BookRegistrationValidator();
+    BookValidator bookValidator() {
+        return new BookValidator();
+    }
+
+    @Bean
+    BookLocationValidator bookLocationValidator() {
+        return new BookLocationValidator();
+    }
+
+    @Bean
+    AuthorValidator authorValidator() {
+        return new AuthorValidator();
     }
 
 }
