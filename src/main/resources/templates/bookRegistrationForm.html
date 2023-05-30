@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Insert name</title>
+</head>
+<body>
+<form th:action="@{/registerbook}" th:object="${book}" method="post">
+    <p>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" size="15" placeholder="book name"/>
+        <span th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></span>
+    </p>
+    <p>
+        <label>Isbn13:</label>
+        <input type="text" th:field="*{isbn13}" size="15" placeholder="book name"/>
+        <span th:if="${#fields.hasErrors('isbn13')}" th:errorclass="error" th:errors="*{isbn13}"></span>
+    </p>
+    <p>
+        <label>Price:</label>
+        <input type="number" th:field="*{priceInEuro}" size="15" placeholder="book name"/>
+        <span th:if="${#fields.hasErrors('priceInEuro')}" th:errorclass="error" th:errors="*{priceInEuro}"></span>
+    </p>
+    <button type="submit">OK</button>
+        <div th:if="${#fields.hasErrors()}" class="error">
+            <ul>
+                <li th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
+            </ul>
+        </div>
+</form>
+</body>
+</html>

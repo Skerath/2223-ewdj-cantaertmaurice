@@ -15,11 +15,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = "userId")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id", nullable = false)
+    @ToString.Exclude
     private UUID userId;
 
     @Column(name = "username", nullable = false, unique = true)

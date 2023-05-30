@@ -6,7 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.util.ProxyUtils;
 
-import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,16 +14,15 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = "bookId")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "book_id", nullable = false)
+    @ToString.Exclude
     private UUID bookId;
 
     @Column(name = "name", nullable = false)
-    @NotEmpty/* TODO check met i18n (message = "Name cannot be empty")*/
     @NotBlank
     private String name;
 
@@ -37,8 +35,8 @@ public class Book {
     private @Setter(AccessLevel.NONE) String isbn13;
 
     @Column(name = "price_in_euro", precision = 2, scale = 2)
-    @Min(0) @Max(100)
-    private BigDecimal priceInEuro;
+    @Min(1) @Max(99)
+    private Double priceInEuro;
 
     @Formula(value = "(SELECT count(*) FROM user_favoritebooks " +
             "WHERE user_favoritebooks.book_id=book_id)")
