@@ -11,21 +11,9 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 public class BookLocation {
-
-//    BookLocation(Book book, int placeCode1, int placeCode2, String locationName) {
-//        if (Math.abs(placeCode1 - placeCode2) < 50) // TODO custom exceptions & custom validation class
-//            throw new IllegalArgumentException(String.format("placeCodes total wasn't min 50, min %d max %d total %d", placeCode1, placeCode2, Math.abs(placeCode1 - placeCode2)));
-//        this.placeCode1 = placeCode1;
-//        this.placeCode2 = placeCode2;
-//        this.locationName = locationName;
-//    }
-
-    public BookLocation(Book book) {
-        setBook(book);
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,15 +27,17 @@ public class BookLocation {
 
     @Column(name = "place_code_1", nullable = false)
     @Min(50) @Max(300)
-    private int placeCode1;
+    @NotNull(message = "{NotNull.bookLocation.placeCode}")
+    private Integer placeCode1;
 
     @Column(name = "place_code_2", nullable = false)
     @Min(50) @Max(300)
-    private int placeCode2;
+    @NotNull(message = "{NotNull.bookLocation.placeCode}")
+    private Integer placeCode2;
 
     @Column(name = "location_name", nullable = false)
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z]$")
+    @Pattern(regexp = "^[A-Z][a-z]+$")
     private String locationName;
 
     @Override

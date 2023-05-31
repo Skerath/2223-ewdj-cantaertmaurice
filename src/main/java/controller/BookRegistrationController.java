@@ -37,13 +37,10 @@ public class BookRegistrationController {
 
         Book toAddBook = new Book();
 
-        toAddBook.addBookLocation(new BookLocation(toAddBook));
-        toAddBook.addAuthor(new Author(List.of(toAddBook)));
+        toAddBook.addBookLocation(new BookLocation());
+        toAddBook.addAuthor(new Author());
 
-        log.error(toAddBook.getBookLocations().toString());
-        log.error(toAddBook.getAuthors().toString());
-
-        model.addAttribute("book", toAddBook);
+        model.addAttribute("book", toAddBook); // TODO: booklocations & authors don't get their book. maybe jpa does this automatically?
         model.addAttribute("bookLocations", toAddBook.getBookLocations());
         model.addAttribute("authors", toAddBook.getAuthors());
         return "bookRegistrationForm";
@@ -51,18 +48,16 @@ public class BookRegistrationController {
 
     @PostMapping
     public String processRegistration(@Valid Book registration, BindingResult result, Model model) {
+        bookValidator.validate(registration, result);
+
         for (BookLocation bookLocation : registration.getBookLocations())
             bookLocationValidator.validate(bookLocation, result);
 
         for (Author author : registration.getAuthors())
             authorValidator.validate(author, result);
 
-        if (result.hasErrors()) {
-            log.error(registration.toString());
-            log.error(result.getAllErrors().toString());
+        if (result.hasErrors())
             return "bookRegistrationForm";
-        }
-        String isbn13 = registration.getIsbn13();
-        return "redirect:/book/" + isbn13;
+        return "redirect:/book/" + registration.getIsbn13();
     }
 }

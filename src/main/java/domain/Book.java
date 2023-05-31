@@ -33,7 +33,8 @@ public class Book {
     private List<Author> authors = new ArrayList<>();
 
     @Column(name = "isbn_13", nullable = false, unique = true)
-    private @Setter(AccessLevel.NONE) String isbn13;
+    @NotBlank
+    private String isbn13;
 
     @Column(name = "price_in_euro", precision = 2, scale = 2)
     @Min(1) @Max(99)
@@ -43,7 +44,7 @@ public class Book {
     @Formula(value = "(SELECT count(*) FROM user_favoritebooks " +
             "WHERE user_favoritebooks.book_id=book_id)")
     @Column(name = "stars", nullable = false)
-    private @Setter(AccessLevel.NONE) int stars = 999999;
+    private @Setter(AccessLevel.NONE) int stars = 0;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "book", orphanRemoval = true)

@@ -2,28 +2,26 @@ package domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.data.util.ProxyUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 public class Author {
-
-    public Author(List<Book> books) {
-        this.books = books;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "author_id", nullable = false)
     @ToString.Exclude
-    private UUID authorId;
+    private UUID authorId = UUID.randomUUID();
 
     @NotBlank
     @Column(name = "first_name", nullable = false)
