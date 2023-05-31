@@ -23,7 +23,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "author_id", nullable = false)
     @ToString.Exclude
-    private UUID authorId = UUID.randomUUID();
+    private UUID authorId;
 
     @Column(name = "first_name", nullable = false)
     @NotBlank(message = "{validation.author.firstName.NotBlank}")

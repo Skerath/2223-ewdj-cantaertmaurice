@@ -2,11 +2,16 @@ package validator;
 
 import domain.Book;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import repository.BookRepository;
 
 @Slf4j
 public class BookValidator implements Validator {
+
+    @Autowired
+    BookRepository bookRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -23,6 +28,14 @@ public class BookValidator implements Validator {
                     "Given ISBN13 was an invalid code");
             return;
         }
+
+        Book existingBook = bookRepository.findBookByIsbn13(isbn13);
+        if (existingBook != null && !existingBook.equals(registration)) {
+            errors.rejectValue("isbn13", "validation.book.isbn13.Exists",
+                    "Given ISBN13 is already registered");
+            return;
+        }
+
         registration.setIsbn13(isbn13);
     }
 

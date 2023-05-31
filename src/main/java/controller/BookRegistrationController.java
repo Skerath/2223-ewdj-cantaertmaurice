@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import repository.AuthorRepository;
+import repository.BookLocationRepository;
+import repository.BookRepository;
 import validator.AuthorValidator;
 import validator.BookLocationValidator;
 import validator.BookValidator;
@@ -21,6 +24,12 @@ import validator.BookValidator;
 @RequestMapping("/registerbook")
 @Slf4j
 public class BookRegistrationController {
+    @Autowired
+    private BookLocationRepository bookLocationRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
     private BookValidator bookValidator;
@@ -62,6 +71,10 @@ public class BookRegistrationController {
 
         if (result.hasErrors())
             return "bookRegistrationForm";
+
+        authorRepository.saveAll(registration.getAuthors());
+        bookLocationRepository.saveAll(registration.getBookLocations());
+        bookRepository.save(registration);
 
         return "redirect:/book/" + registration.getIsbn13();
     }

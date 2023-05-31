@@ -2,28 +2,37 @@ package domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Formula;
 import org.springframework.data.util.ProxyUtils;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @ToString
 @Slf4j
+@NamedQueries({
+        @NamedQuery(name = "Book.getStars",
+                query = "SELECT count(*) FROM User JOIN Book fb WHERE fb.bookId=:bookId") })
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "book_id", nullable = false)
     @ToString.Exclude
-    private UUID bookId = UUID.randomUUID();
+    private UUID bookId;
 
     @Column(name = "name", nullable = false)
     @NotBlank(message = "{validation.book.name.NotBlank}")
@@ -40,17 +49,12 @@ public class Book {
 
     @Column(name = "isbn_13", nullable = false, unique = true)
     @NotBlank(message = "{validation.book.isbn13.NotBlank}")
-    @Setter
     private String isbn13;
 
     @Column(name = "price_in_euro", precision = 2)
     @Min(value = 1, message = "{validation.book.priceInEuro.Min}") @Max(value = 99, message = "{validation.book.priceInEuro.Max}")
 //    @NumberFormat(pattern = "##.##")
     private BigDecimal priceInEuro;
-
-    @Formula(value = "(SELECT count(*) FROM user_favoritebooks " + "WHERE user_favoritebooks.book_id=book_id)")
-    @Column(name = "stars", nullable = false)
-    private int stars = 0;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "book", orphanRemoval = true)

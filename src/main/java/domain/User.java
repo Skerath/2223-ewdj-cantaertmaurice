@@ -6,15 +6,13 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.data.util.ProxyUtils;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -44,22 +42,22 @@ public class User {
     @JoinTable(name = "user_favoritebooks",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
-    private @Setter(AccessLevel.PRIVATE) Set<Book> favoriteBooks = new LinkedHashSet<>();
+    private List<Book> favoriteBooks = new ArrayList<>();
 
     public boolean isFavoriteLimited() {
         return getFavoriteBooks().size() == getFavoriteBooksLimit();
     }
 
     public void addFavouriteBook(Book book) {
-        if (getFavoriteBooks().size() == favoriteBooksLimit) // todo custom exception & external validator
+        if (getFavoriteBooks().size() == favoriteBooksLimit) // TODO custom exception & external validator
             throw new IllegalArgumentException(String.format("too many books, %d/%d ", getFavoriteBooks().size(), favoriteBooksLimit));
         getFavoriteBooks().add(book);
     }
 
     public void removeFavouriteBook(Book book) {
-        if (!getFavoriteBooks().contains(book)) // todo custom exception & external validator
+        if (!getFavoriteBooks().contains(book)) // TODO custom exception & external validator
             throw new IllegalArgumentException("book wasn't in favourites");
-        getFavoriteBooks().add(book);
+        getFavoriteBooks().remove(book);
     }
 
     @Override

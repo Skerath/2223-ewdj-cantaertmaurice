@@ -3,6 +3,7 @@ package controller;
 import domain.Author;
 import domain.Book;
 import domain.BookLocation;
+import domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import repository.AuthorRepository;
 import repository.BookLocationRepository;
 import repository.BookRepository;
+import repository.UserRepository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class InitDataConfig implements CommandLineRunner {
     private BookLocationRepository bookLocationRepository;
     @Autowired
     private AuthorRepository authorRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Override
@@ -34,11 +38,11 @@ public class InitDataConfig implements CommandLineRunner {
         Author jp = new Author(null, "Jan", "Piere", new ArrayList<>());
         Author sk = new Author(null, "Stephen", "King", new ArrayList<>());
         Author ma = new Author(null, "Marcus", "Aurelius", new ArrayList<>(3));
+        User user = new User(null, "test", "test", true, 2, new ArrayList<>());
 
-        Book book = new Book(null, "Meditations", new ArrayList<>(3), "9781603093255", new BigDecimal("15.00"), 889, new ArrayList<>(3));
+        Book book = new Book(null, "Meditations", new ArrayList<>(3), "9781603093255", new BigDecimal("15.00"), new ArrayList<>(3));
 
         BookLocation bookLocation = new BookLocation(null, book, 51, 52, "Philosophy");
-
 
         authorRepository.save(jp);
         authorRepository.save(sk);
@@ -47,6 +51,8 @@ public class InitDataConfig implements CommandLineRunner {
         book.addBookLocation(bookLocation);
         bookRepository.save(book);
         bookLocationRepository.save(bookLocation);
-    }
 
+        user.addFavouriteBook(book);
+        userRepository.save(user);
+    }
 }
