@@ -50,12 +50,38 @@
             <span th:if="${#fields.hasErrors('authors[__${status.index}__].firstName')}" th:errorclass="error" th:errors="*{authors[__${status.index}__].firstName}" ></span>
         </p>
     </div>
+    <button type="button" id="add-author-button" onclick="addAuthorRow()">Add Author</button>
+    <button type="button" id="add-location-button" onclick="addLocationRow()">Add Location</button>
     <button type="submit">OK</button>
+    <input type="hidden" name="addAuthor" id="addAuthorInput" />
+    <input type="hidden" name="addLocation" id="addLocationInput" />
     <div th:if="${#fields.hasErrors()}" class="error">
         <ul>
             <li th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
         </ul>
     </div>
 </form>
+<script>
+    function addAuthorRow() {
+        document.getElementById('addAuthorInput').value = true;
+        document.querySelector('form').submit();
+    }
+    function addLocationRow() {
+        document.getElementById('addLocationInput').value = true;
+        document.querySelector('form').submit();
+    }
+</script>
+<script th:inline="javascript">
+    document.getElementById('addAuthorInput').value = false;
+    document.getElementById('addLocationInput').value = false;
+
+    let authorCount = [[${book.authors.size()}]];
+    if (authorCount >= 3)
+        document.getElementById("add-author-button").style.display = "none";
+
+    let locationCount = [[${book.bookLocations.size()}]];
+    if (locationCount >= 3)
+        document.getElementById("add-location-button").style.display = "none";
+</script>
 </body>
 </html>

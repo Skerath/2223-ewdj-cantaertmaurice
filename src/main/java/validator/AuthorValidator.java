@@ -14,7 +14,7 @@ public class AuthorValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        @Valid Author registration = (Author) target;
+        Author registration = (Author) target;
 
 //        double price = registration.getPrice();
 //        if (price <= 0 || price >= 100) {
