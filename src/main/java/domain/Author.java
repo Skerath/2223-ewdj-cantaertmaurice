@@ -17,6 +17,12 @@ import java.util.UUID;
 @ToString
 public class Author {
 
+    public Author(String firstName, String lastName, List<Book> books) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.books = books;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "author_id", nullable = false)

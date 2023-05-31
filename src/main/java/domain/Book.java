@@ -16,6 +16,20 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 public class Book {
+
+    public Book(String name) {
+        this.name = name;
+        this.authors = new ArrayList<>();
+        authors.add(new Author("Jan", "Piere", List.of(this)));
+        authors.add(new Author("Deux", "Dubbel", List.of(this)));
+        authors.add(new Author("Trois", "Derde", List.of(this)));
+        isbn13 = "121212";
+        priceInEuro = 10.00;
+        stars = 13;
+        this.bookLocations = new ArrayList<>();
+        bookLocations.add(new BookLocation(this, 52, 66, "Locatietje1"));
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "book_id", nullable = false)
