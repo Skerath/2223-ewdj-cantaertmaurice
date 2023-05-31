@@ -2,6 +2,7 @@ package domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.util.ProxyUtils;
 
@@ -14,14 +15,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 @ToString
 public class Author {
-
-    public Author(String firstName, String lastName, List<Book> books) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.books = books;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -37,12 +33,17 @@ public class Author {
     @NotBlank(message = "{validation.author.lastName.NotBlank}")
     private String lastName;
 
-    @ManyToMany
-    @JoinTable(name = "author_books",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id"))
+    @ManyToMany (mappedBy = "authors")
     @ToString.Exclude
     private List<Book> books = new ArrayList<>();
+
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    public void removeBook(Book book) {
+        books.remove(book);
+    }
 
     @Override
     public boolean equals(Object o) {

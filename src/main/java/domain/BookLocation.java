@@ -12,15 +12,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 @ToString
 public class BookLocation {
-
-    public BookLocation(Book book, Integer placeCode1, Integer placeCode2, String locationName) {
-        this.book = book;
-        this.placeCode1 = placeCode1;
-        this.placeCode2 = placeCode2;
-        this.locationName = locationName;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

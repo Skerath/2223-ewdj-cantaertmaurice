@@ -4,31 +4,20 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.util.ProxyUtils;
-import org.springframework.format.annotation.NumberFormat;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 @ToString
+@Slf4j
 public class Book {
-
-    public Book(String name) {
-        this.name = name;
-        this.authors = new ArrayList<>();
-        authors.add(new Author("Jan", "Piere", List.of(this)));
-        authors.add(new Author("Deux", "Dubbel", List.of(this)));
-        authors.add(new Author("Trois", "Derde", List.of(this)));
-        isbn13 = "121212";
-        priceInEuro = 10.00;
-        stars = 13;
-        this.bookLocations = new ArrayList<>();
-        bookLocations.add(new BookLocation(this, 52, 66, "Locatietje1"));
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -40,7 +29,10 @@ public class Book {
     @NotBlank(message = "{validation.book.name.NotBlank}")
     private String name;
 
-    @ManyToMany(mappedBy = "books")
+    @ManyToMany
+    @JoinTable(name = "author_books",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
     @ToString.Exclude
     @Size(min = 1, max = 3, message = "{validation.book.authors.Size}")
     @Valid
@@ -48,17 +40,17 @@ public class Book {
 
     @Column(name = "isbn_13", nullable = false, unique = true)
     @NotBlank(message = "{validation.book.isbn13.NotBlank}")
+    @Setter
     private String isbn13;
 
-    @Column(name = "price_in_euro", precision = 2, scale = 2)
+    @Column(name = "price_in_euro", precision = 2)
     @Min(value = 1, message = "{validation.book.priceInEuro.Min}") @Max(value = 99, message = "{validation.book.priceInEuro.Max}")
-    @NumberFormat(pattern = "##.##")
-    private Double priceInEuro;
+//    @NumberFormat(pattern = "##.##")
+    private BigDecimal priceInEuro;
 
-    @Formula(value = "(SELECT count(*) FROM user_favoritebooks " +
-            "WHERE user_favoritebooks.book_id=book_id)")
+    @Formula(value = "(SELECT count(*) FROM user_favoritebooks " + "WHERE user_favoritebooks.book_id=book_id)")
     @Column(name = "stars", nullable = false)
-    private @Setter(AccessLevel.NONE) int stars = 0;
+    private int stars = 0;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "book", orphanRemoval = true)
@@ -71,7 +63,7 @@ public class Book {
     }
 
     public void removeBookLocation(BookLocation location) {
-        bookLocations.add(location);
+        bookLocations.remove(location);
     }
 
     public void addAuthor(Author author) {
@@ -79,14 +71,13 @@ public class Book {
     }
 
     public void removeAuthor(Author author) {
-        authors.add(author);
+        authors.remove(author);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || ProxyUtils.getUserClass(this) != ProxyUtils.getUserClass(o))
-            return false;
+        if (o == null || ProxyUtils.getUserClass(this) != ProxyUtils.getUserClass(o)) return false;
         Book book = (Book) o;
         return getBookId() != null && Objects.equals(getBookId(), book.getBookId());
     }

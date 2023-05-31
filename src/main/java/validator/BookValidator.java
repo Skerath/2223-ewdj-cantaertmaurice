@@ -1,12 +1,9 @@
 package validator;
 
-import domain.Author;
 import domain.Book;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import java.util.List;
 
 @Slf4j
 public class BookValidator implements Validator {

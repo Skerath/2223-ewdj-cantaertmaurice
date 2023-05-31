@@ -14,7 +14,7 @@ public class BookDetailsController {
     @GetMapping(value = "/{isbn13}")
     public String showBook(Model model, @PathVariable String isbn13) {
         log.error(isbn13);
-        Book toAddBook = new Book("Boeeeek");
+        Book toAddBook = new Book();
 
         model.addAttribute("book", toAddBook);
 //        model.addAttribute("bookLocations", toAddBook.getBookLocations());
