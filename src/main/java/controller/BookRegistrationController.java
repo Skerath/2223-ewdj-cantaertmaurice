@@ -17,10 +17,6 @@ import validator.AuthorValidator;
 import validator.BookLocationValidator;
 import validator.BookValidator;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 @Controller
 @RequestMapping("/registerbook")
 @Slf4j
@@ -56,8 +52,6 @@ public class BookRegistrationController {
             registration.addBookLocation(new BookLocation());
             return "bookRegistrationForm";
         }
-
-        // TODO betere error messages
 
         bookValidator.validate(registration, result);
 

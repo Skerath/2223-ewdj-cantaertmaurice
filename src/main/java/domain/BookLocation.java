@@ -26,18 +26,20 @@ public class BookLocation {
     private Book book;
 
     @Column(name = "place_code_1", nullable = false)
-    @Min(50) @Max(300)
-    @NotNull(message = "{NotNull.bookLocation.placeCode}")
+    @Min(value = 50, message = "{validation.bookLocation.placeCode1.Min}")
+    @Max(value = 300, message = "{validation.bookLocation.placeCode1.Max}")
+    @NotNull(message = "{validation.bookLocation.placeCode1.NotNull}")
     private Integer placeCode1;
 
     @Column(name = "place_code_2", nullable = false)
-    @Min(50) @Max(300)
-    @NotNull(message = "{NotNull.bookLocation.placeCode}")
+    @Min(value = 50, message = "{validation.bookLocation.placeCode2.Min}")
+    @Max(value = 300, message = "{validation.bookLocation.placeCode2.Max}")
+    @NotNull(message = "{validation.bookLocation.placeCode2.NotNull}")
     private Integer placeCode2;
 
     @Column(name = "location_name", nullable = false)
-    @NotBlank
-    @Pattern(regexp = "^[A-Z][a-z]+$")
+    @NotBlank(message = "{validation.bookLocation.locationName.NotBlank}")
+//    @Pattern(regexp = "^[A-Z][a-z]+$")
     private String locationName;
 
     @Override

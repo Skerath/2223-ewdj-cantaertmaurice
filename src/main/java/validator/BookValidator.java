@@ -22,8 +22,8 @@ public class BookValidator implements Validator {
 
         String isbn13 = filterISBN13(registration.getIsbn13());
         if (!validateChecksum(isbn13)) {
-            errors.rejectValue("isbn13", "invalidISBN",
-                    "{invalidISBN13.book.isbn13}");
+            errors.rejectValue("isbn13", "validation.book.isbn13.Invalid",
+                    "Given ISBN13 was an invalid code");
             return;
         }
         registration.setIsbn13(isbn13);

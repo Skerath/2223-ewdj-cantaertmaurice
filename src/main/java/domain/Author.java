@@ -23,12 +23,12 @@ public class Author {
     @ToString.Exclude
     private UUID authorId = UUID.randomUUID();
 
-    @NotBlank
     @Column(name = "first_name", nullable = false)
+    @NotBlank(message = "{validation.author.firstName.NotBlank}")
     private String firstName;
 
-    @NotBlank
     @Column(name = "last_name", nullable = false)
+    @NotBlank(message = "{validation.author.lastName.NotBlank}")
     private String lastName;
 
     @ManyToMany

@@ -2,60 +2,69 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="ISO-8859-1">
-    <title>Insert name</title>
+    <title th:text="#{page.addbook.title}"></title>
 </head>
 <body>
+<h1 th:text="#{page.addbook.heading.page}"></h1>
 <form th:action="@{/registerbook}" th:object="${book}" method="post">
     <p>
-        <label>Name:</label>
-        <input type="text" th:field="*{name}" size="15" placeholder="book name"/>
+        <label th:text="#{page.addbook.label.book.name}"></label>
+        <input type="text" th:field="*{name}" size="15"/>
         <span th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></span>
     </p>
     <p>
-        <label>Isbn13:</label>
-        <input type="text" th:field="*{isbn13}" size="15" placeholder="book name"/>
+        <label th:text="#{page.addbook.label.book.isbn13}"></label>
+        <input type="text" th:field="*{isbn13}" size="15"/>
         <span th:if="${#fields.hasErrors('isbn13')}" th:errorclass="error" th:errors="*{isbn13}"></span>
     </p>
     <p>
-        <label>Price:</label>
-        <input type="number" th:field="*{priceInEuro}" size="15" placeholder="book name"/>
+        <label th:text="#{page.addbook.label.book.price}"></label>
+        <input type="number" th:field="*{priceInEuro}" size="15"/>
         <span th:if="${#fields.hasErrors('priceInEuro')}" th:errorclass="error" th:errors="*{priceInEuro}"></span>
     </p>
     <div th:each="location, status : *{bookLocations}">
         <p>
-            <label>Name:</label>
-            <input type="text" th:field="*{bookLocations[__${status.index}__].locationName}" />
-            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].locationName')}" th:errorclass="error" th:errors="*{bookLocations[__${status.index}__].locationName}"></span>
+            <label th:text="#{page.addbook.label.bookLocation.locationName}"></label>
+            <input type="text" th:field="*{bookLocations[__${status.index}__].locationName}"/>
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].locationName')}" th:errorclass="error"
+                  th:errors="*{bookLocations[__${status.index}__].locationName}"></span>
         </p>
         <p>
-            <label>Place Code 1:</label>
-            <input type="text" th:field="*{bookLocations[__${status.index}__].placeCode1}" />
-            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode1')}" th:errorclass="error" th:errors="*{bookLocations[__${status.index}__].placeCode1}" ></span>
+            <label th:text="#{page.addbook.label.bookLocation.placeCode1}"></label>
+            <input type="number" th:field="*{bookLocations[__${status.index}__].placeCode1}"/>
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode1')}" th:errorclass="error"
+                  th:errors="*{bookLocations[__${status.index}__].placeCode1}"></span>
         </p>
         <p>
-            <label>Place Code 2:</label>
-            <input type="text" th:field="*{bookLocations[__${status.index}__].placeCode2}" />
-            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode2')}" th:errorclass="error" th:errors="*{bookLocations[__${status.index}__].placeCode2}"></span>
+            <label th:text="#{page.addbook.label.bookLocation.placeCode2}"></label>
+            <input type="number" th:field="*{bookLocations[__${status.index}__].placeCode2}"/>
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode2')}" th:errorclass="error"
+                  th:errors="*{bookLocations[__${status.index}__].placeCode2}"></span>
         </p>
     </div>
     <div th:each="author, status : *{authors}">
         <p>
-            <label>Last Name:</label>
-            <input type="text" th:field="*{authors[__${status.index}__].lastName}" />
-            <span th:if="${#fields.hasErrors('authors[__${status.index}__].lastName')}" th:errorclass="error" th:errors="*{authors[__${status.index}__].lastName}"></span>
+            <label th:text="#{page.addbook.label.author.lastName}"></label>
+            <input type="text" th:field="*{authors[__${status.index}__].lastName}"/>
+            <span th:if="${#fields.hasErrors('authors[__${status.index}__].lastName')}" th:errorclass="error"
+                  th:errors="*{authors[__${status.index}__].lastName}"></span>
         </p>
         <p>
-            <label>First Name:</label>
-            <input type="text" th:field="*{authors[__${status.index}__].firstName}" />
-            <span th:if="${#fields.hasErrors('authors[__${status.index}__].firstName')}" th:errorclass="error" th:errors="*{authors[__${status.index}__].firstName}" ></span>
+            <label th:text="#{page.addbook.label.author.firstName}"></label>
+            <input type="text" th:field="*{authors[__${status.index}__].firstName}"/>
+            <span th:if="${#fields.hasErrors('authors[__${status.index}__].firstName')}" th:errorclass="error"
+                  th:errors="*{authors[__${status.index}__].firstName}"></span>
         </p>
     </div>
-    <button type="button" id="add-author-button" onclick="addAuthorRow()">Add Author</button>
-    <button type="button" id="add-location-button" onclick="addLocationRow()">Add Location</button>
-    <button type="submit">OK</button>
-    <input type="hidden" name="addAuthor" id="addAuthorInput" />
-    <input type="hidden" name="addLocation" id="addLocationInput" />
+    <button th:text="#{page.addbook.button.addAuthor}" type="button" id="add-author-button"
+            onclick="addAuthorRow()"></button>
+    <button th:text="#{page.addbook.button.addLocation}" type="button" id="add-location-button"
+            onclick="addLocationRow()"></button>
+    <button th:text="#{page.addbook.button.submit}" type="submit"></button>
+    <input type="hidden" name="addAuthor" id="addAuthorInput"/>
+    <input type="hidden" name="addLocation" id="addLocationInput"/>
     <div th:if="${#fields.hasErrors()}" class="error">
+        <h3 th:text="#{page.addbook.heading.error}"></h3>
         <ul>
             <li th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
         </ul>
@@ -66,6 +75,7 @@
         document.getElementById('addAuthorInput').value = true;
         document.querySelector('form').submit();
     }
+
     function addLocationRow() {
         document.getElementById('addLocationInput').value = true;
         document.querySelector('form').submit();
