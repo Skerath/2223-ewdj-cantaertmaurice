@@ -44,21 +44,21 @@ public class EwdjProjectApplication implements WebMvcConfigurer {
         slr.setDefaultLocale(Locale.ENGLISH);
         return slr;
     }
-
-    @Bean
-    BookValidator bookValidator() {
-        return new BookValidator();
-    }
-
-    @Bean
-    BookLocationValidator bookLocationValidator() {
-        return new BookLocationValidator();
-    }
-
-    @Bean
-    AuthorValidator authorValidator() {
-        return new AuthorValidator();
-    }
+//
+//    @Bean
+//    BookValidator bookValidator() {
+//        return new BookValidator();
+//    }
+//
+//    @Bean
+//    BookLocationValidator bookLocationValidator() {
+//        return new BookLocationValidator();
+//    }
+//
+//    @Bean
+//    AuthorValidator authorValidator() {
+//        return new AuthorValidator();
+//    }
 
 }
 

@@ -2,10 +2,12 @@ package validator;
 
 import domain.BookLocation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Slf4j
+@Component
 public class BookLocationValidator implements Validator {
 
     @Override

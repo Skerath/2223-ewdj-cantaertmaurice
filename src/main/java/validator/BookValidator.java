@@ -3,11 +3,13 @@ package validator;
 import domain.Book;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import repository.BookRepository;
 
 @Slf4j
+@Component
 public class BookValidator implements Validator {
 
     @Autowired
