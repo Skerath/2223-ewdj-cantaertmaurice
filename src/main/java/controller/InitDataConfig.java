@@ -1,12 +1,10 @@
 package controller;
 
-import domain.Author;
-import domain.Book;
-import domain.BookLocation;
-import domain.User;
+import domain.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import repository.AuthorRepository;
 import repository.BookLocationRepository;
@@ -35,10 +33,13 @@ public class InitDataConfig implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
         Author jp = new Author(null, "Jan", "Piere", new ArrayList<>());
         Author sk = new Author(null, "Stephen", "King", new ArrayList<>());
         Author ma = new Author(null, "Marcus", "Aurelius", new ArrayList<>(3));
-        User user = new User(null, "test", "test", true, 2, new ArrayList<>());
+//        User tessa = new User(null, "Tessa", bCryptPasswordEncoder.encode("test"), 2, new ArrayList<>());
+//        User admin = new User(null, "Admin", bCryptPasswordEncoder.encode("admin"), 2, new ArrayList<>());
 
         Book book = new Book(null, "Meditations", new ArrayList<>(3), "9781603093255", new BigDecimal("15.00"), new ArrayList<>(3));
 
@@ -52,7 +53,8 @@ public class InitDataConfig implements CommandLineRunner {
         bookRepository.save(book);
         bookLocationRepository.save(bookLocation);
 
-        user.addFavouriteBook(book);
-        userRepository.save(user);
+//        tessa.addFavouriteBook(book);
+//        userRepository.save(tessa);
+//        userRepository.save(admin);
     }
 }

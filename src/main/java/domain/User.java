@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.data.util.ProxyUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
@@ -13,7 +15,8 @@ import java.util.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User {
+@Table(name = "users")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,10 +32,7 @@ public class User {
     @Column(name = "password", nullable = false)
     @NotBlank
     @NotEmpty
-    private String password; // TODO: encrypt this
-
-    @Column(name = "is_admin", nullable = false)
-    private boolean isAdmin;
+    private String password;
 
     @Column(name = "favorite_books_limit", nullable = false)
     private int favoriteBooksLimit;
@@ -43,6 +43,9 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
     private List<Book> favoriteBooks = new ArrayList<>();
+
+    @Column(name = "enabled", nullable = false)
+    private final boolean enabled = true;
 
     public boolean isFavoriteLimited() {
         return getFavoriteBooks().size() == getFavoriteBooksLimit();
@@ -72,5 +75,30 @@ public class User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(() -> "read");
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

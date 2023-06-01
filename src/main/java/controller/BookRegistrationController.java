@@ -6,6 +6,8 @@ import domain.BookLocation;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,8 @@ import repository.BookRepository;
 import validator.AuthorValidator;
 import validator.BookLocationValidator;
 import validator.BookValidator;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/registerbook")
@@ -41,7 +45,13 @@ public class BookRegistrationController {
     private AuthorValidator authorValidator;
 
     @GetMapping
-    public String showRegistration(Model model) {
+    public String showRegistration(Model model,
+                                   Authentication authentication) {
+
+        List<String> roles = authentication.getAuthorities()
+                .stream().map(GrantedAuthority::getAuthority).toList();
+
+        log.error(roles.toString());
 
         Book toAddBook = new Book();
 
@@ -52,7 +62,14 @@ public class BookRegistrationController {
     }
 
     @PostMapping
-    public String processRegistration(@Valid Book registration, BindingResult result, @RequestParam(value = "addAuthor", required = false) boolean addAuthor, @RequestParam(value = "addLocation", required = false) boolean addLocation, Model model) {
+    public String processRegistration(@Valid Book registration, BindingResult result,
+                                      @RequestParam(value = "addAuthor", required = false) boolean addAuthor,
+                                      @RequestParam(value = "addLocation", required = false) boolean addLocation,
+                                      Model model,
+                                      Authentication authentication) {
+        List<String> roles = authentication.getAuthorities()
+                .stream().map(GrantedAuthority::getAuthority).toList();
+
         if (addAuthor) {
             registration.addAuthor(new Author());
             return "bookRegistrationForm";

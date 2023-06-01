@@ -63,6 +63,7 @@
     <button th:text="#{page.addbook.button.submit}" type="submit"></button>
     <input type="hidden" name="addAuthor" id="addAuthorInput"/>
     <input type="hidden" name="addLocation" id="addLocationInput"/>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     <div th:if="${#fields.hasErrors()}" class="error">
         <h3 th:text="#{page.addbook.heading.error}"></h3>
         <ul>
