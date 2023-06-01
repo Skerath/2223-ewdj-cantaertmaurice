@@ -5,6 +5,10 @@
     <title th:text="#{page.addbook.title}"></title>
 </head>
 <body>
+<form th:action="@{/logout}" method="post">
+    <input th:value="#{button.logout}" type="submit" />
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+</form>
 <h1 th:text="#{page.addbook.heading.page}"></h1>
 <form th:action="@{/registerbook}" th:object="${book}" method="post">
     <p>

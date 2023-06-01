@@ -31,10 +31,11 @@ public class SecurityConfig {
                         requests.requestMatchers("/login**").permitAll()
                                 .requestMatchers("/css/**").permitAll()
                                 .requestMatchers("/403**").permitAll()
-                                .requestMatchers("/*")
-                                .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")))
+                                .requestMatchers("/registerbook").
+                                access(new WebExpressionAuthorizationManager("hasRole('ROLE_ADMIN')"))
+                                .requestMatchers("/*").permitAll())
                 .formLogin(form ->
-                        form.defaultSuccessUrl("/welcome", true)
+                        form.defaultSuccessUrl("/", true)
                                 .loginPage("/login")
                                 .usernameParameter("username").passwordParameter("password"))
                 .exceptionHandling().accessDeniedPage("/403");

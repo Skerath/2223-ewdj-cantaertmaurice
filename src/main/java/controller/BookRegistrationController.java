@@ -48,10 +48,9 @@ public class BookRegistrationController {
     public String showRegistration(Model model,
                                    Authentication authentication) {
 
+
         List<String> roles = authentication.getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority).toList();
-
-        log.error(roles.toString());
 
         Book toAddBook = new Book();
 
