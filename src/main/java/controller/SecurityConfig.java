@@ -32,9 +32,11 @@ public class SecurityConfig {
                                 .requestMatchers("/css/**").permitAll()
                                 .requestMatchers("/403**").permitAll()
                                 .requestMatchers("/book/**").permitAll()
-                                .requestMatchers("/registerbook").
-                                access(new WebExpressionAuthorizationManager("hasRole('ROLE_ADMIN')"))
-                                .requestMatchers("/*").permitAll())
+                                .requestMatchers("/registerbook")
+                                        .access(new WebExpressionAuthorizationManager("hasRole('ROLE_ADMIN')"))
+                                .requestMatchers("/*")
+                                .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"))
+                )
                 .formLogin(form ->
                         form.defaultSuccessUrl("/", true)
                                 .loginPage("/login")

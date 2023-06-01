@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="ISO-8859-1">
-  <title th:text="#{page.addbook.title}"></title>
+    <meta charset="ISO-8859-1">
+    <title th:text="#{page.addbook.title}"></title>
 </head>
 <body>
+<form th:action="@{/logout}" method="post">
+    <input th:value="#{button.logout}" type="submit" />
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+</form>
 <h1 th:text="#{page.addbook.heading.page}"></h1>
 <button th:action="@{/editbook}" th:method="get">Edit book</button>
 <table>
-  <tr>
-    <td>Name</td>
-    <td th:text="${book.name}"></td>
-  </tr>
-  <tr>
-    <td>ISBN</td>
-    <td th:text="${book.isbn13}"></td>
-  </tr>
-  <tr>
-    <td>Price</td>
-    <td th:text="${book.priceInEuro}"></td>
-  </tr>
+    <tr>
+        <td>Name</td>
+        <td th:text="${book.name}"></td>
+    </tr>
+    <tr>
+        <td>ISBN</td>
+        <td th:text="${book.isbn13}"></td>
+    </tr>
+    <tr>
+        <td>Price</td>
+        <td th:text="${book.priceInEuro}"></td>
+    </tr>
 </table>
 <script>
-  function addAuthorRow() {
-    document.getElementById('addAuthorInput').value = true;
-    document.querySelector('form').submit();
-  }
+    function addAuthorRow() {
+        document.getElementById('addAuthorInput').value = true;
+        document.querySelector('form').submit();
+    }
 
-  function addLocationRow() {
-    document.getElementById('addLocationInput').value = true;
-    document.querySelector('form').submit();
-  }
+    function addLocationRow() {
+        document.getElementById('addLocationInput').value = true;
+        document.querySelector('form').submit();
+    }
 </script>
 </body>
 </html>
