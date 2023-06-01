@@ -10,7 +10,7 @@
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 </form>
 <h1 th:text="#{page.addbook.heading.page}"></h1>
-<form th:action="@{/registerbook}" th:object="${book}" method="post">
+<form id="book-form" th:action="@{/registerbook}" th:object="${book}" method="post">
     <p>
         <label th:text="#{page.addbook.label.book.name}"></label>
         <input type="text" th:field="*{name}" size="15"/>
@@ -23,7 +23,7 @@
     </p>
     <p>
         <label th:text="#{page.addbook.label.book.price}"></label>
-        <input type="number" th:field="*{priceInEuro}" size="15"/>
+        <input type="number" th:field="*{priceInEuro}" step="0.01" onchange="formatInput(this)" size="15"/>
         <span th:if="${#fields.hasErrors('priceInEuro')}" th:errorclass="error" th:errors="*{priceInEuro}"></span>
     </p>
     <div th:each="location, status : *{bookLocations}">
@@ -78,12 +78,19 @@
 <script>
     function addAuthorRow() {
         document.getElementById('addAuthorInput').value = true;
-        document.querySelector('form').submit();
+        document.getElementById('book-form').submit();
     }
 
     function addLocationRow() {
         document.getElementById('addLocationInput').value = true;
-        document.querySelector('form').submit();
+        document.getElementById('book-form').submit();
+
+    }
+
+    function formatInput(input) {
+        const value = input.value;
+        const formattedValue = parseFloat(value).toFixed(2);
+        input.value = formattedValue;
     }
 </script>
 <script th:inline="javascript">

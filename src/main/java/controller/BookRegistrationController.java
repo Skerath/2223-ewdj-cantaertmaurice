@@ -47,14 +47,9 @@ public class BookRegistrationController {
     @GetMapping
     public String showRegistration(Model model,
                                    Authentication authentication) {
-
-
-        List<String> roles = authentication.getAuthorities()
-                .stream().map(GrantedAuthority::getAuthority).toList();
-
         Book toAddBook = new Book();
 
-        model.addAttribute("book", toAddBook); // TODO: booklocations & authors don't get their book. maybe jpa does this automatically?
+        model.addAttribute("book", toAddBook);
         model.addAttribute("bookLocations", toAddBook.getBookLocations());
         model.addAttribute("authors", toAddBook.getAuthors());
         return "bookRegistrationForm";
@@ -66,8 +61,6 @@ public class BookRegistrationController {
                                       @RequestParam(value = "addLocation", required = false) boolean addLocation,
                                       Model model,
                                       Authentication authentication) {
-        List<String> roles = authentication.getAuthorities()
-                .stream().map(GrantedAuthority::getAuthority).toList();
 
         if (addAuthor) {
             registration.addAuthor(new Author());
