@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="ISO-8859-1">
     <title>Students</title>
@@ -10,7 +10,8 @@
     <input type="submit" value="Logout" th:text="|Welcome, ${username}|"/>
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 </form>
-<h2>Students</h2>
+<a id="top10Btn" th:href="@{/popular}" class="btn btn-primary">Browse Top 10 Books</a>
+<a id="allBooksBtn" th:href="@{/}" class="btn btn-primary">Browse All Books</a>
 <table>
     <tr>
         <th>Index</th>
@@ -44,8 +45,20 @@
 
         </tr>
     </th:block>
-
 </table>
 <br>
 </body>
+<script th:inline="javascript">
+    window.addEventListener('DOMContentLoaded', (event) => {
+        let top10Btn = document.getElementById('top10Btn');
+        let allBooksBtn = document.getElementById('allBooksBtn');
+        if (window.location.pathname === '/') {
+            allBooksBtn.style.display = 'none';
+            top10Btn.style.display = 'block';
+        } else {
+            allBooksBtn.style.display = 'block';
+            top10Btn.style.display = 'none';
+        }
+    });
+</script>
 </html>

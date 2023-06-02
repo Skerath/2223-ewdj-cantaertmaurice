@@ -24,15 +24,27 @@ import java.util.UUID;
 @ToString
 @Slf4j
 @NamedQueries({
-        @NamedQuery(name = "Book.getStars",
-                query = "SELECT count(*) FROM User JOIN Book fb WHERE fb.bookId=:bookId"),
-            @NamedQuery(
-                    name = "Book.getStarsForBooks",
-                    query = "SELECT fb.bookId, COUNT(*) " +
-                            "FROM User u " +
-                            "JOIN u.favoriteBooks fb " +
-                            "GROUP BY fb.bookId"
-            ),
+        @NamedQuery(
+                name = "Book.getStarsForBooks",
+                query = "SELECT fb.bookId, COUNT(*) " +
+                        "FROM User u " +
+                        "JOIN u.favoriteBooks fb " +
+                        "GROUP BY fb.bookId"
+        ),
+//        select b.book_id
+//        from book b
+//        join user_favoritebooks fb
+//        group by b.book_id
+//        order by count(b.book_id) desc;
+        @NamedQuery(
+                name = "Book.getTop10Books",
+                query = "SELECT b, COUNT(fb) " +
+                        "FROM Book b " +
+                        "JOIN User u " +
+                        "JOIN u.favoriteBooks fb " +
+                        "GROUP BY b " +
+                        "ORDER BY COUNT(fb) DESC"
+        ),
         @NamedQuery(name = "Book.findAllOrderedByBookId",
                 query = "SELECT b FROM Book b ORDER BY b.bookId")})
 public class Book {

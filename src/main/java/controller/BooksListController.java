@@ -25,28 +25,40 @@ public class BooksListController {
     @Autowired
     BookRepository bookRepository;
 
-    @GetMapping
-    public String showBooks(Model model, Authentication authentication) {
-        List<Book> books = bookRepository.findAllOrderedByBookId();
-//        List<Object[]> starsPerBook = bookRepository.getStarsForBooks();
-//        Map<UUID, Long> starsPerBookParsed = starsPerBook.stream()
-//                .collect(Collectors.toMap(bookId -> (UUID) bookId[0], stars -> (Long) stars[1]));
 
+
+    @GetMapping
+    public String showBooks(Model model) {
+        Iterable<Book> books = bookRepository.findAllOrderedByBookId();
         Map<UUID, Long> starsPerBook = bookRepository.getStarsForBooks().
                 stream()
                 .collect(
                         Collectors.toMap(bookId -> (UUID) bookId[0], stars -> (Long) stars[1])
                 );
-
-//        log.error(starsPerBook.get(0)[0].toString());
-//        log.error(starsPerBook.get(0)[1].toString());
-//        log.error(String.valueOf(starsPerBookParsed.get(starsPerBook.get(0)[0])));
-//        log.error(String.valueOf(starsPerBookParsed.get(UUID.randomUUID())));
-
         model.addAttribute("booksList", books);
         model.addAttribute("starsPerBook", starsPerBook);
-//        model.addAttribute("bookLocations", toAddBook.getBookLocations());
-//        model.addAttribute("authors", toAddBook.getAuthors());
+        return "booksList";
+    }
+
+    @GetMapping(value = "/popular")
+    public String showPopularBooks(Model model, Authentication authentication) {
+        Map<Book, Long> books = bookRepository.getTop10Books().
+                stream()
+                .collect(
+                        Collectors.toMap(book -> (Book) book[0], stars -> (Long) stars[1])
+                );;
+        log.error(books.toString());
+        Map<UUID, Long> starsPerBook = bookRepository.getStarsForBooks().
+                stream()
+                .collect(
+                        Collectors.toMap(bookId -> (UUID) bookId[0], stars -> (Long) stars[1])
+                );
+//        Map<UUID, Long> top10UUIDs = starsPerBook.entrySet().stream()
+//                .sorted(Map.Entry.<UUID, Long>comparingByValue().reversed())
+//                .limit(10)
+//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        model.addAttribute("booksList", books.keySet());
+        model.addAttribute("starsPerBook", starsPerBook);
         return "booksList";
     }
 
