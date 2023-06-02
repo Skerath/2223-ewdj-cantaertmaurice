@@ -15,7 +15,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class User implements UserDetails {
 
     @Id
@@ -46,6 +46,10 @@ public class User implements UserDetails {
 
     @Column(name = "enabled", nullable = false)
     private final boolean enabled = true;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserAuthorities> listAuthorities = new ArrayList<>();
+
 
     public boolean isFavoriteLimited() {
         return getFavoriteBooks().size() == getFavoriteBooksLimit();

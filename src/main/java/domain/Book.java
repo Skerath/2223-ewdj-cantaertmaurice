@@ -53,7 +53,6 @@ public class Book {
 
     @Column(name = "price_in_euro", precision = 2)
     @Min(value = 1, message = "{validation.book.priceInEuro.Min}") @Max(value = 99, message = "{validation.book.priceInEuro.Max}")
-//    @NumberFormat(pattern = "##.##")
     private BigDecimal priceInEuro;
 
     @ToString.Exclude

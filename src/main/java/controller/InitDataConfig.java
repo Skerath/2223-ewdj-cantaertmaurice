@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import repository.AuthorRepository;
-import repository.BookLocationRepository;
-import repository.BookRepository;
-import repository.UserRepository;
+import repository.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,6 +25,8 @@ public class InitDataConfig implements CommandLineRunner {
     private AuthorRepository authorRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserAuthoritiesRepository authoritiesRepository;
 
 
     @Override
@@ -52,6 +51,20 @@ public class InitDataConfig implements CommandLineRunner {
         book.addBookLocation(bookLocation);
         bookRepository.save(book);
         bookLocationRepository.save(bookLocation);
+
+        ArrayList<Book> favouriteBooks = new ArrayList<>();
+        favouriteBooks.add(book);
+
+
+        User user = new User(null, "Tessa", bCryptPasswordEncoder.encode("test"), 3, favouriteBooks, new ArrayList<>());
+        UserAuthorities userAuthorities = new UserAuthorities(null, user, "ROLE_USER");
+        User admin = new User(null, "admin", bCryptPasswordEncoder.encode("admin"), 3, new ArrayList<>(), new ArrayList<>());
+        UserAuthorities adminAuthorities = new UserAuthorities(null, admin, "ROLE_ADMIN");
+
+        userRepository.save(user);
+        authoritiesRepository.save(userAuthorities);
+        userRepository.save(admin);
+        authoritiesRepository.save(adminAuthorities);
 
 //        tessa.addFavouriteBook(book);
 //        userRepository.save(tessa);
