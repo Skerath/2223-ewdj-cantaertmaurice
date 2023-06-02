@@ -97,7 +97,7 @@ public class BookEdittingController {
             Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null);
             if (correspondingAuthorFromDb == null) {
                 log.error("ping");
-                author.addBook(registration);
+//                author.addBook(registration);
                 newAuthors.add(author);
             } else {
                 log.error("pong");
@@ -123,7 +123,7 @@ public class BookEdittingController {
 
         toUpdateBook.getAuthors().clear();
         authorRepository.saveAll(newAuthors);
-//        toUpdateBook.getAuthors().addAll(newAuthors);
+        toUpdateBook.getAuthors().addAll(newAuthors);
         toUpdateBook.getAuthors().addAll(existingAuthors);
 
         toUpdateBook.getBookLocations().clear();
