@@ -34,7 +34,7 @@ public class SecurityConfig {
                                 .requestMatchers("/book/**").permitAll()
                                 .requestMatchers("/registerbook")
                                 .access(new WebExpressionAuthorizationManager("hasRole('ROLE_ADMIN')"))
-                                .requestMatchers("/registerbook/update")
+                                .requestMatchers("/update/*")
                                 .access(new WebExpressionAuthorizationManager("hasRole('ROLE_ADMIN')"))
                                 .requestMatchers("/*")
                                 .access(new WebExpressionAuthorizationManager("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"))

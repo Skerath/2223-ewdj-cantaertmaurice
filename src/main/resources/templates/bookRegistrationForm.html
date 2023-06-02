@@ -10,7 +10,7 @@
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 </form>
 <h1 th:text="#{page.addbook.heading.page}"></h1>
-<form id="book-form" th:action="@{/registerbook}" th:object="${book}" method="post">
+<form id="book-form" th:object="${book}" method="post">
     <input type="hidden" th:field="*{bookId}" />
     <p>
         <label th:text="#{page.addbook.label.book.name}"></label>
@@ -95,6 +95,10 @@
     }
 </script>
 <script th:inline="javascript">
+    let currentUrl = window.location.href;
+    let actionUrl = currentUrl.includes('/update/') ? '/update/' + [[${book.isbn13}]] : '/registerbook';
+    document.getElementById('book-form').action = actionUrl;
+
     document.getElementById('addAuthorInput').value = false;
     document.getElementById('addLocationInput').value = false;
 

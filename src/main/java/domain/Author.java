@@ -38,16 +38,16 @@ public class Author {
     private List<Book> books = new ArrayList<>();
 
     public void addBook(Book newBook) {
-        boolean updated = true;
-        for (int i = 0; i < books.size(); i++) {
-            if (books.get(i).equals(newBook)) {
-                log.error("ping");
-                books.set(i, newBook);
-                updated = false;
-                break;
-            }
-        }
-        if (!updated)
+//        boolean updated = true;
+//        for (int i = 0; i < books.size(); i++) {
+//            if (books.get(i).equals(newBook)) {
+//                log.error("ping");
+//                books.set(i, newBook);
+//                updated = false;
+//                break;
+//            }
+//        }
+//        if (!updated)
             books.add(newBook);
     }
 
