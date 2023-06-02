@@ -32,6 +32,13 @@ import java.util.UUID;
                         "GROUP BY fb.bookId"
         ),
         @NamedQuery(
+                name = "Book.getStarsForBook",
+                query = "SELECT COUNT(*) " +
+                        "FROM User u " +
+                        "JOIN u.favoriteBooks fb " +
+                        "WHERE fb.bookId = :bookId"
+        ),
+        @NamedQuery(
                 name = "Book.getBooksWithFavoriteCount",
                 query = "SELECT b, COUNT(fb) " +
                         "FROM Book b " +

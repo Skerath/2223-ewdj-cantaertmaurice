@@ -2,6 +2,7 @@ package repository;
 
 import domain.Book;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.UUID;
 public interface BookRepository extends CrudRepository<Book, UUID> {
 
     Book findBookByIsbn13(String isbn13);
+
+    Integer getStarsForBook(@Param("bookId") UUID bookId);
 
     List<Object[]> getStarsForBooks();
 

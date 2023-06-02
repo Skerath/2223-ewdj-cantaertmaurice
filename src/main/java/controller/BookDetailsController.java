@@ -45,10 +45,12 @@ public class BookDetailsController {
             return "redirect:/404";
 
         boolean isFavorited = userRepository.getBookIsFavorited(book.getBookId(), user.getUserId());
+        int stars = bookRepository.getStarsForBook(book.getBookId());
 
         model.addAttribute("book", book);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isFavorited", isFavorited);
+        model.addAttribute("stars", stars);
         return "bookDetails";
     }
 
