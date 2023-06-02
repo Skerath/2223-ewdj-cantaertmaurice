@@ -45,8 +45,8 @@ public class BooksListController {
         Map<Book, Long> books = bookRepository.getTop10Books().
                 stream()
                 .collect(
-                        Collectors.toMap(book -> (Book) book[0], stars -> (Long) stars[1])
-                );;
+                        Collectors.toMap(book -> (Book) book[0], stars -> (Long) stars[1]) // TODO if time check this out
+                );
         log.error(books.toString());
         Map<UUID, Long> starsPerBook = bookRepository.getStarsForBooks().
                 stream()

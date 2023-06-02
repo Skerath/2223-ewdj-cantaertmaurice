@@ -46,8 +46,6 @@ public class BookEdittingController {
     @GetMapping(value = "/{isbn13}")
     public String showUpdate(Model model,
                              @PathVariable String isbn13) {
-
-//        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList(); TODO
         try {
             if (isbn13.isBlank())
                 throw new NoSuchElementException();
