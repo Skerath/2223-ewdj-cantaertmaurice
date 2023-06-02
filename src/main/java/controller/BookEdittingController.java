@@ -92,25 +92,14 @@ public class BookEdittingController {
         List<Author> newAuthors = new ArrayList<>();
         List<Author> existingAuthors = new ArrayList<>();
         for (Author author : registration.getAuthors()) {
-            log.error(author.toString());
             authorValidator.validate(author, result);
             Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null);
             if (correspondingAuthorFromDb == null) {
-                log.error("ping");
-//                author.addBook(registration);
                 newAuthors.add(author);
             } else {
-                log.error("pong");
                 existingAuthors.add(author);
                 authorRepository.save(author);
             }
-            log.error("vanform:");
-            log.error(author.toString());
-            if (correspondingAuthorFromDb != null) {
-                log.error("vandb:");
-                log.error(correspondingAuthorFromDb.toString());
-            }
-            log.error("-------------");
         }
 
         bookValidator.validate(registration, result);
