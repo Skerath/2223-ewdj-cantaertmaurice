@@ -37,20 +37,23 @@ public class InitDataConfig implements CommandLineRunner {
         Author jp = new Author(UUID.randomUUID(), "Jan", "Piere", new ArrayList<>());
         Author sk = new Author(UUID.randomUUID(), "Stephen", "King", new ArrayList<>());
         Author ma = new Author(UUID.randomUUID(), "Marcus", "Aurelius", new ArrayList<>(3));
-//        User tessa = new User(null, "Tessa", bCryptPasswordEncoder.encode("test"), 2, new ArrayList<>());
-//        User admin = new User(null, "Admin", bCryptPasswordEncoder.encode("admin"), 2, new ArrayList<>());
 
         Book book = new Book(UUID.randomUUID(), "Meditations", new ArrayList<>(3), "9781603093255", new BigDecimal("15.00"), new ArrayList<>(3));
-
-        BookLocation bookLocation = new BookLocation(UUID.randomUUID(), book, 51, 52, "Philosophy");
+        Book noFavourites = new Book(UUID.randomUUID(), "It", new ArrayList<>(3), "9783453435773", null, new ArrayList<>(3));
+        BookLocation bookLocationMA = new BookLocation(UUID.randomUUID(), book, 51, 52, "Philosophy");
+        BookLocation bookLocationSK = new BookLocation(UUID.randomUUID(), noFavourites, 52, 53, "Horror");
 
         authorRepository.save(jp);
         authorRepository.save(sk);
         authorRepository.save(ma);
         book.addAuthor(ma);
-        book.addBookLocation(bookLocation);
+        book.addBookLocation(bookLocationMA);
         bookRepository.save(book);
-        bookLocationRepository.save(bookLocation);
+        noFavourites.addAuthor(sk);
+        noFavourites.addBookLocation(bookLocationSK);
+        bookRepository.save(noFavourites);
+        bookLocationRepository.save(bookLocationMA);
+        bookLocationRepository.save(bookLocationSK);
 
         ArrayList<Book> favouriteBooks = new ArrayList<>();
         favouriteBooks.add(book);
@@ -66,8 +69,5 @@ public class InitDataConfig implements CommandLineRunner {
         userRepository.save(admin);
         authoritiesRepository.save(adminAuthorities);
 
-//        tessa.addFavouriteBook(book);
-//        userRepository.save(tessa);
-//        userRepository.save(admin);
     }
 }

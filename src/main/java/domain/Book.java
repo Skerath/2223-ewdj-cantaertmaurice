@@ -25,7 +25,16 @@ import java.util.UUID;
 @Slf4j
 @NamedQueries({
         @NamedQuery(name = "Book.getStars",
-                query = "SELECT count(*) FROM User JOIN Book fb WHERE fb.bookId=:bookId") })
+                query = "SELECT count(*) FROM User JOIN Book fb WHERE fb.bookId=:bookId"),
+            @NamedQuery(
+                    name = "Book.getStarsForBooks",
+                    query = "SELECT fb.bookId, COUNT(*) " +
+                            "FROM User u " +
+                            "JOIN u.favoriteBooks fb " +
+                            "GROUP BY fb.bookId"
+            ),
+        @NamedQuery(name = "Book.findAllOrderedByBookId",
+                query = "SELECT b FROM Book b ORDER BY b.bookId")})
 public class Book {
 
     @Id
@@ -50,11 +59,12 @@ public class Book {
     private String isbn13;
 
     @Column(name = "price_in_euro", precision = 2)
-    @Min(value = 1, message = "{validation.book.priceInEuro.Min}") @Max(value = 99, message = "{validation.book.priceInEuro.Max}")
+    @Min(value = 1, message = "{validation.book.priceInEuro.Min}")
+    @Max(value = 99, message = "{validation.book.priceInEuro.Max}")
     private BigDecimal priceInEuro;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     @Size(min = 1, max = 3, message = "{validation.book.bookLocations.Size}")
     @Valid
     private List<BookLocation> bookLocations = new ArrayList<>();
