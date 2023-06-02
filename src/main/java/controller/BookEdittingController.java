@@ -48,7 +48,8 @@ public class BookEdittingController {
         try {
             if (isbn13.isBlank())
                 throw new NoSuchElementException();
-            Book toUpdateBook = bookRepository.findBookByIsbn13(isbn13);
+            Book toUpdateBook = bookRepository.findBookByIsbn13(isbn13); // TODO page book not found
+
             model.addAttribute("book", toUpdateBook);
             model.addAttribute("bookLocations", toUpdateBook.getBookLocations());
             model.addAttribute("authors", toUpdateBook.getAuthors());
@@ -72,44 +73,44 @@ public class BookEdittingController {
             return "bookRegistrationForm";
         }
 
-        log.error(registration.getAuthors().toString());
-
         Book toUpdateBook = bookRepository.findById(registration.getBookId()).get();
-        List<Author> authorList = new ArrayList<>();
-        registration.getAuthors().stream()
-                .map(Author::getAuthorId)
-                .forEach(uuid -> authorList.add(authorRepository.findById(uuid).get()));
-
-        log.error(registration.toString());
 
         List<BookLocation> newBookLocations = new ArrayList<>();
         List<BookLocation> existingBookLocations = new ArrayList<>();
         for (BookLocation bookLocation : registration.getBookLocations()) {
             bookLocationValidator.validate(bookLocation, result);
-            if (bookLocation.getLocationId() == null) {
-                log.error("loc new");
+            BookLocation correspondingLocationFromDb = bookLocationRepository.findById(bookLocation.getLocationId()).orElse(null);
+            if (correspondingLocationFromDb == null) {
                 bookLocation.setBook(registration);
                 newBookLocations.add(bookLocation);
             } else {
-                log.error("loc old");
-//                bookLocation.setBook(registration);
                 existingBookLocations.add(bookLocation);
+                bookLocationRepository.save(bookLocation);
             }
         }
 
         List<Author> newAuthors = new ArrayList<>();
         List<Author> existingAuthors = new ArrayList<>();
-        for (Author author : authorList) {
-            authorValidator.validate(author, result);
+        for (Author author : registration.getAuthors()) {
             log.error(author.toString());
-            if (author.getAuthorId() == null) {
+            authorValidator.validate(author, result);
+            Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null);
+            if (correspondingAuthorFromDb == null) {
+                log.error("ping");
                 author.addBook(registration);
-                log.error("author new");
                 newAuthors.add(author);
             } else {
-                log.error("author old");
+                log.error("pong");
                 existingAuthors.add(author);
+                authorRepository.save(author);
             }
+            log.error("vanform:");
+            log.error(author.toString());
+            if (correspondingAuthorFromDb != null) {
+                log.error("vandb:");
+                log.error(correspondingAuthorFromDb.toString());
+            }
+            log.error("-------------");
         }
 
         bookValidator.validate(registration, result);
@@ -117,13 +118,12 @@ public class BookEdittingController {
         if (result.hasErrors())
             return "bookRegistrationForm";
 
-
         toUpdateBook.setIsbn13(registration.getIsbn13());
         toUpdateBook.setName(registration.getName());
 
         toUpdateBook.getAuthors().clear();
         authorRepository.saveAll(newAuthors);
-        toUpdateBook.getAuthors().addAll(newAuthors);
+//        toUpdateBook.getAuthors().addAll(newAuthors);
         toUpdateBook.getAuthors().addAll(existingAuthors);
 
         toUpdateBook.getBookLocations().clear();
