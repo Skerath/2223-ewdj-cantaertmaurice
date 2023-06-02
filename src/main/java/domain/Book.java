@@ -31,13 +31,8 @@ import java.util.UUID;
                         "JOIN u.favoriteBooks fb " +
                         "GROUP BY fb.bookId"
         ),
-//        select b.book_id
-//        from book b
-//        join user_favoritebooks fb
-//        group by b.book_id
-//        order by count(b.book_id) desc;
         @NamedQuery(
-                name = "Book.getTop10Books",
+                name = "Book.getBooksWithFavoriteCount",
                 query = "SELECT b, COUNT(fb) " +
                         "FROM Book b " +
                         "JOIN User u " +
@@ -45,8 +40,8 @@ import java.util.UUID;
                         "GROUP BY b " +
                         "ORDER BY COUNT(fb) DESC"
         ),
-        @NamedQuery(name = "Book.findAllOrderedByBookId",
-                query = "SELECT b FROM Book b ORDER BY b.bookId")})
+        @NamedQuery(name = "Book.findAllBooksOrderedByName",
+                query = "SELECT b FROM Book b ORDER BY b.name")})
 public class Book {
 
     @Id

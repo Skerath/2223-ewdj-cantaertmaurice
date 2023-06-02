@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import repository.BookRepository;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 @RequestMapping("/")
@@ -26,10 +25,9 @@ public class BooksListController {
     BookRepository bookRepository;
 
 
-
     @GetMapping
     public String showBooks(Model model) {
-        Iterable<Book> books = bookRepository.findAllOrderedByBookId();
+        Iterable<Book> books = bookRepository.findAllBooksOrderedByName();
         Map<UUID, Long> starsPerBook = bookRepository.getStarsForBooks().
                 stream()
                 .collect(
@@ -42,22 +40,18 @@ public class BooksListController {
 
     @GetMapping(value = "/popular")
     public String showPopularBooks(Model model, Authentication authentication) {
-        Map<Book, Long> books = bookRepository.getTop10Books().
-                stream()
-                .collect(
-                        Collectors.toMap(book -> (Book) book[0], stars -> (Long) stars[1]) // TODO if time check this out
-                );
-        log.error(books.toString());
-        Map<UUID, Long> starsPerBook = bookRepository.getStarsForBooks().
-                stream()
+        Iterable<Book> books = bookRepository.findAllBooksOrderedByName();
+        Map<UUID, Long> starsPerBook = bookRepository.getBooksWithFavoriteCount()
+                .stream()
                 .collect(
                         Collectors.toMap(bookId -> (UUID) bookId[0], stars -> (Long) stars[1])
                 );
-//        Map<UUID, Long> top10UUIDs = starsPerBook.entrySet().stream()
-//                .sorted(Map.Entry.<UUID, Long>comparingByValue().reversed())
-//                .limit(10)
-//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        model.addAttribute("booksList", books.keySet());
+
+        List<Book> sortedBooks = StreamSupport.stream(books.spliterator(), false)
+                .sorted(Comparator.comparing(book -> starsPerBook.getOrDefault(book.getBookId(), 0L), Comparator.reverseOrder()))
+                .toList();
+        log.error(sortedBooks.toString());
+        model.addAttribute("booksList", sortedBooks);
         model.addAttribute("starsPerBook", starsPerBook);
         return "booksList";
     }
