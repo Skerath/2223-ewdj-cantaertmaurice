@@ -2,9 +2,9 @@ package domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.data.util.ProxyUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,12 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @ToString
+@Slf4j
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "author_id", nullable = false)
-    @ToString.Exclude
     private UUID authorId;
 
     @Column(name = "first_name", nullable = false)
@@ -33,12 +33,22 @@ public class Author {
     @NotBlank(message = "{validation.author.lastName.NotBlank}")
     private String lastName;
 
-    @ManyToMany (mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Book> books = new ArrayList<>();
 
-    public void addBook(Book book) {
-        books.add(book);
+    public void addBook(Book newBook) {
+        boolean updated = true;
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).equals(newBook)) {
+                log.error("ping");
+                books.set(i, newBook);
+                updated = false;
+                break;
+            }
+        }
+        if (!updated)
+            books.add(newBook);
     }
 
     public void removeBook(Book book) {
@@ -48,8 +58,7 @@ public class Author {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || ProxyUtils.getUserClass(this) != ProxyUtils.getUserClass(o))
-            return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Author author = (Author) o;
         return getAuthorId() != null && Objects.equals(getAuthorId(), author.getAuthorId());
     }

@@ -11,6 +11,7 @@
 </form>
 <h1 th:text="#{page.addbook.heading.page}"></h1>
 <form id="book-form" th:action="@{/registerbook}" th:object="${book}" method="post">
+    <input type="hidden" th:field="*{bookId}" />
     <p>
         <label th:text="#{page.addbook.label.book.name}"></label>
         <input type="text" th:field="*{name}" size="15"/>

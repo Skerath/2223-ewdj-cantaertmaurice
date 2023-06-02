@@ -11,10 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import repository.AuthorRepository;
 import repository.BookLocationRepository;
 import repository.BookRepository;
@@ -23,6 +20,8 @@ import validator.BookLocationValidator;
 import validator.BookValidator;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/registerbook")
@@ -45,8 +44,7 @@ public class BookRegistrationController {
     private AuthorValidator authorValidator;
 
     @GetMapping
-    public String showRegistration(Model model,
-                                   Authentication authentication) {
+    public String showRegistration(Model model, @ModelAttribute("bookId") String uuid) {
         Book toAddBook = new Book();
 
         model.addAttribute("book", toAddBook);
@@ -55,13 +53,10 @@ public class BookRegistrationController {
         return "bookRegistrationForm";
     }
 
-    @PostMapping
+    @PostMapping()
     public String processRegistration(@Valid Book registration, BindingResult result,
                                       @RequestParam(value = "addAuthor", required = false) boolean addAuthor,
-                                      @RequestParam(value = "addLocation", required = false) boolean addLocation,
-                                      Model model,
-                                      Authentication authentication) {
-
+                                      @RequestParam(value = "addLocation", required = false) boolean addLocation) {
         if (addAuthor) {
             registration.addAuthor(new Author());
             return "bookRegistrationForm";
@@ -71,20 +66,73 @@ public class BookRegistrationController {
             return "bookRegistrationForm";
         }
 
-        bookValidator.validate(registration, result);
-
-        for (BookLocation bookLocation : registration.getBookLocations())
+        for (BookLocation bookLocation : registration.getBookLocations()) {
             bookLocationValidator.validate(bookLocation, result);
-        for (Author author : registration.getAuthors())
+            bookLocation.setBook(registration);
+        }
+        for (Author author : registration.getAuthors()) {
             authorValidator.validate(author, result);
+            author.addBook(registration);
+        }
+
+        bookValidator.validate(registration, result);
 
         if (result.hasErrors())
             return "bookRegistrationForm";
 
         authorRepository.saveAll(registration.getAuthors());
-        bookLocationRepository.saveAll(registration.getBookLocations());
         bookRepository.save(registration);
+        bookLocationRepository.saveAll(registration.getBookLocations());
 
         return "redirect:/book/" + registration.getIsbn13();
+    }
+
+    @GetMapping(path = "/update")
+    public String showUpdate(Model model, @ModelAttribute("bookId") String uuid) {
+        Book toAddBook;
+        if (!uuid.isBlank()) {
+            toAddBook = bookRepository.findById(UUID.fromString(uuid)).orElse(new Book());
+        } else {
+            toAddBook = new Book();
+        }
+
+        model.addAttribute("book", toAddBook);
+        model.addAttribute("bookLocations", toAddBook.getBookLocations());
+        model.addAttribute("authors", toAddBook.getAuthors());
+        return "bookRegistrationForm";
+    }
+
+    @PostMapping(path = "/update")
+    public String updateRegistration(@Valid Book registration, BindingResult result,
+                                      @RequestParam(value = "addAuthor", required = false) boolean addAuthor,
+                                      @RequestParam(value = "addLocation", required = false) boolean addLocation) {
+        if (addAuthor) {
+            registration.addAuthor(new Author());
+            return "bookRegistrationForm";
+        }
+        if (addLocation) {
+            registration.addBookLocation(new BookLocation());
+            return "bookRegistrationForm";
+        }
+
+        for (BookLocation bookLocation : registration.getBookLocations()) {
+            bookLocationValidator.validate(bookLocation, result);
+            bookLocation.setBook(registration);
+        }
+        for (Author author : registration.getAuthors()) {
+            authorValidator.validate(author, result);
+            author.addBook(registration);
+        }
+
+        bookValidator.validate(registration, result);
+
+        if (result.hasErrors())
+            return "bookRegistrationForm";
+
+        authorRepository.saveAll(registration.getAuthors());
+        Book updatedBook = bookRepository.save(registration);
+        bookLocationRepository.saveAll(registration.getBookLocations());
+
+        return "redirect:/book/" + updatedBook.getIsbn13();
     }
 }

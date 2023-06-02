@@ -31,7 +31,6 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "book_id", nullable = false)
-    @ToString.Exclude
     private UUID bookId;
 
     @Column(name = "name", nullable = false)
@@ -40,8 +39,8 @@ public class Book {
 
     @ManyToMany
     @JoinTable(name = "author_books",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id"))
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
     @ToString.Exclude
     @Size(min = 1, max = 3, message = "{validation.book.authors.Size}")
     @Valid
@@ -56,7 +55,7 @@ public class Book {
     private BigDecimal priceInEuro;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "book", orphanRemoval = true)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL,orphanRemoval = true)
     @Size(min = 1, max = 3, message = "{validation.book.bookLocations.Size}")
     @Valid
     private List<BookLocation> bookLocations = new ArrayList<>();

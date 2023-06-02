@@ -22,15 +22,9 @@ public class BookDetailsController {
 
     @GetMapping(value = "/{isbn13}")
     public String showBook(Model model, @PathVariable String isbn13, Authentication authentication) {
-        log.error(isbn13);
-
-
-        List<String> roles = authentication.getAuthorities()
-                .stream().map(GrantedAuthority::getAuthority).toList();
-
-        log.error(roles.toString());
-
         Book book = bookRepository.findBookByIsbn13(isbn13);
+
+        // TODO if book null return 404
 
         model.addAttribute("book", book);
 //        model.addAttribute("bookLocations", toAddBook.getBookLocations());
