@@ -16,12 +16,32 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@NamedQuery(
+        name = "User.getFavoriteBookIds",
+        query = "SELECT fb.bookId " +
+                "FROM User u " +
+                "JOIN u.favoriteBooks fb " +
+                "WHERE fb.id=:userId"
+)
+@NamedQuery(
+        name = "User.getBookIsFavorited",
+        query = "SELECT CASE WHEN COUNT(fb) > 0 THEN true ELSE false END " +
+                "FROM User u " +
+                "JOIN u.favoriteBooks fb " +
+                "WHERE u.userId = :userId AND fb.bookId = :bookId"
+)
+@NamedQuery(
+        name = "User.getFavoriteListSize",
+        query = "SELECT COUNT(fb) " +
+                "FROM User u " +
+                "JOIN u.favoriteBooks fb " +
+                "WHERE u.userId = :userId"
+)
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id", nullable = false)
-    @ToString.Exclude
     private UUID userId;
 
     @Column(name = "username", nullable = false, unique = true)
@@ -104,5 +124,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "userId = " + userId + ", " +
+                "username = " + username + ", " +
+                "favoriteBooksLimit = " + favoriteBooksLimit + ")";
     }
 }
