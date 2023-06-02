@@ -59,7 +59,7 @@ public class InitDataConfig implements CommandLineRunner {
         favouriteBooks.add(book);
 
 
-        User user = new User(UUID.randomUUID(), "Tessa", bCryptPasswordEncoder.encode("test"), 3, favouriteBooks, new ArrayList<>());
+        User user = new User(UUID.randomUUID(), "Tessa", bCryptPasswordEncoder.encode("test"), 1, favouriteBooks, new ArrayList<>());
         UserAuthorities userAuthorities = new UserAuthorities(null, user, "ROLE_USER");
         User admin = new User(UUID.randomUUID(), "admin", bCryptPasswordEncoder.encode("admin"), 3, new ArrayList<>(), new ArrayList<>());
         UserAuthorities adminAuthorities = new UserAuthorities(null, admin, "ROLE_ADMIN");

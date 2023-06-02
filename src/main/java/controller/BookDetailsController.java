@@ -60,17 +60,10 @@ public class BookDetailsController {
         Book book = bookRepository.findBookByIsbn13(isbn13);
         User authenticationUser = (User) authentication.getPrincipal();
         domain.User user = userRepository.findUserByUsername(authenticationUser.getUsername());
-
-        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        log.error(roles.toString());
-        boolean isAdmin = roles.contains("ROLE_ADMIN");
-
         log.error("ping");
 
         if (book == null)
             return "redirect:/404";
-        if (isAdmin)
-            return "redirect:/403";
 
         boolean isFavorited = userRepository.getBookIsFavorited(book.getBookId(), user.getUserId());
         log.error(String.valueOf(isFavorited));
@@ -79,8 +72,13 @@ public class BookDetailsController {
             user.removeFavouriteBook(book);
         else if (userRepository.getFavoriteListSize(user.getUserId()) < user.getFavoriteBooksLimit())
             user.addFavouriteBook(book);
-        else
-            return "redirect:/403";
+        else {
+            model.addAttribute("book", book);
+            model.addAttribute("isAdmin", false);
+            model.addAttribute("isFavorited", false);
+            model.addAttribute("isLimited", true);
+            return "bookDetails";
+        }
 
         userRepository.save(user);
 
