@@ -20,9 +20,8 @@ import java.util.UUID;
 public class BookLocation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "location_id", nullable = false)
-    private UUID locationId;
+    private UUID locationId = UUID.randomUUID();
 
     @ManyToOne
     @JoinColumn(name = "book_id")

@@ -71,37 +71,45 @@ public class BookEdittingController {
             registration.addBookLocation(new BookLocation());
             return "bookRegistrationForm";
         }
+
+        log.error(registration.getAuthors().toString());
+
         Book toUpdateBook = bookRepository.findById(registration.getBookId()).get();
+        List<Author> authorList = new ArrayList<>();
+        registration.getAuthors().stream()
+                .map(Author::getAuthorId)
+                .forEach(uuid -> authorList.add(authorRepository.findById(uuid).get()));
 
         log.error(registration.toString());
 
-        List<BookLocation> toUpdateLocations = new ArrayList<>();
-        List<BookLocation> newLocations = new ArrayList<>();
+        List<BookLocation> newBookLocations = new ArrayList<>();
+        List<BookLocation> existingBookLocations = new ArrayList<>();
         for (BookLocation bookLocation : registration.getBookLocations()) {
             bookLocationValidator.validate(bookLocation, result);
             if (bookLocation.getLocationId() == null) {
-                log.error(bookLocation.toString());
+                log.error("loc new");
                 bookLocation.setBook(registration);
-                newLocations.add(bookLocation);
+                newBookLocations.add(bookLocation);
             } else {
-                log.error(String.valueOf(bookLocation.getBook()));
-                toUpdateLocations.add(bookLocation);
+                log.error("loc old");
+//                bookLocation.setBook(registration);
+                existingBookLocations.add(bookLocation);
             }
         }
 
-        List<Author> toUpdateAuthors = new ArrayList<>();
         List<Author> newAuthors = new ArrayList<>();
-        for (Author author : registration.getAuthors()) {
+        List<Author> existingAuthors = new ArrayList<>();
+        for (Author author : authorList) {
             authorValidator.validate(author, result);
             log.error(author.toString());
             if (author.getAuthorId() == null) {
                 author.addBook(registration);
+                log.error("author new");
                 newAuthors.add(author);
             } else {
-                log.error(String.valueOf(author.getBooks()));
-                toUpdateAuthors.add(author);
+                log.error("author old");
+                existingAuthors.add(author);
             }
-            author.addBook(registration);
         }
 
         bookValidator.validate(registration, result);
@@ -112,15 +120,18 @@ public class BookEdittingController {
 
         toUpdateBook.setIsbn13(registration.getIsbn13());
         toUpdateBook.setName(registration.getName());
-        toUpdateBook.getBookLocations().clear();
-        toUpdateBook.getBookLocations().addAll(toUpdateLocations);
+
         toUpdateBook.getAuthors().clear();
-        toUpdateBook.getAuthors().addAll(toUpdateAuthors);
+        authorRepository.saveAll(newAuthors);
+        toUpdateBook.getAuthors().addAll(newAuthors);
+        toUpdateBook.getAuthors().addAll(existingAuthors);
 
-        authorRepository.saveAll(toUpdateAuthors);
+        toUpdateBook.getBookLocations().clear();
+        bookLocationRepository.saveAll(newBookLocations);
+        toUpdateBook.getBookLocations().addAll(newBookLocations);
+        toUpdateBook.getBookLocations().addAll(existingBookLocations);
+
         Book updatedBook = bookRepository.save(toUpdateBook);
-        bookLocationRepository.saveAll(toUpdateLocations);
-
         return "redirect:/book/" + updatedBook.getIsbn13();
     }
 }

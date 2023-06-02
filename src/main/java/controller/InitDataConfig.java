@@ -34,15 +34,15 @@ public class InitDataConfig implements CommandLineRunner {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        Author jp = new Author(null, "Jan", "Piere", new ArrayList<>());
-        Author sk = new Author(null, "Stephen", "King", new ArrayList<>());
-        Author ma = new Author(null, "Marcus", "Aurelius", new ArrayList<>(3));
+        Author jp = new Author(UUID.randomUUID(), "Jan", "Piere", new ArrayList<>());
+        Author sk = new Author(UUID.randomUUID(), "Stephen", "King", new ArrayList<>());
+        Author ma = new Author(UUID.randomUUID(), "Marcus", "Aurelius", new ArrayList<>(3));
 //        User tessa = new User(null, "Tessa", bCryptPasswordEncoder.encode("test"), 2, new ArrayList<>());
 //        User admin = new User(null, "Admin", bCryptPasswordEncoder.encode("admin"), 2, new ArrayList<>());
 
-        Book book = new Book(null, "Meditations", new ArrayList<>(3), "9781603093255", new BigDecimal("15.00"), new ArrayList<>(3));
+        Book book = new Book(UUID.randomUUID(), "Meditations", new ArrayList<>(3), "9781603093255", new BigDecimal("15.00"), new ArrayList<>(3));
 
-        BookLocation bookLocation = new BookLocation(null, book, 51, 52, "Philosophy");
+        BookLocation bookLocation = new BookLocation(UUID.randomUUID(), book, 51, 52, "Philosophy");
 
         authorRepository.save(jp);
         authorRepository.save(sk);
@@ -56,9 +56,9 @@ public class InitDataConfig implements CommandLineRunner {
         favouriteBooks.add(book);
 
 
-        User user = new User(null, "Tessa", bCryptPasswordEncoder.encode("test"), 3, favouriteBooks, new ArrayList<>());
+        User user = new User(UUID.randomUUID(), "Tessa", bCryptPasswordEncoder.encode("test"), 3, favouriteBooks, new ArrayList<>());
         UserAuthorities userAuthorities = new UserAuthorities(null, user, "ROLE_USER");
-        User admin = new User(null, "admin", bCryptPasswordEncoder.encode("admin"), 3, new ArrayList<>(), new ArrayList<>());
+        User admin = new User(UUID.randomUUID(), "admin", bCryptPasswordEncoder.encode("admin"), 3, new ArrayList<>(), new ArrayList<>());
         UserAuthorities adminAuthorities = new UserAuthorities(null, admin, "ROLE_ADMIN");
 
         userRepository.save(user);

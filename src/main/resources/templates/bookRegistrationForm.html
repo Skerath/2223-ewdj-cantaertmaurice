@@ -28,6 +28,8 @@
         <span th:if="${#fields.hasErrors('priceInEuro')}" th:errorclass="error" th:errors="*{priceInEuro}"></span>
     </p>
     <div th:each="location, status : *{bookLocations}">
+        <input type="hidden" th:field="*{bookLocations[__${status.index}__].locationId}" />
+        <input type="hidden" th:field="*{bookLocations[__${status.index}__].book}" />
         <p>
             <label th:text="#{page.addbook.label.bookLocation.locationName}"></label>
             <input type="text" th:field="*{bookLocations[__${status.index}__].locationName}"/>
@@ -48,6 +50,7 @@
         </p>
     </div>
     <div th:each="author, status : *{authors}">
+        <input type="hidden" th:field="*{authors[__${status.index}__].authorId}" />
         <p>
             <label th:text="#{page.addbook.label.author.lastName}"></label>
             <input type="text" th:field="*{authors[__${status.index}__].lastName}"/>

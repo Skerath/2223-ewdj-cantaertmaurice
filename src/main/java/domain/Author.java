@@ -21,9 +21,8 @@ import java.util.UUID;
 public class Author {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "author_id", nullable = false)
-    private UUID authorId;
+    private UUID authorId = UUID.randomUUID();
 
     @Column(name = "first_name", nullable = false)
     @NotBlank(message = "{validation.author.firstName.NotBlank}")
