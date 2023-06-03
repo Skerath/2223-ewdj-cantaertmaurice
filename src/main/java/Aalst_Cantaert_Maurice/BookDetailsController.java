@@ -1,4 +1,4 @@
-package controller;
+package Aalst_Cantaert_Maurice;
 
 import domain.Book;
 import lombok.extern.slf4j.Slf4j;

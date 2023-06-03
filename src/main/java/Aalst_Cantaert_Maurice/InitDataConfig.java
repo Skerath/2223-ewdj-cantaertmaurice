@@ -1,4 +1,4 @@
-package controller;
+package Aalst_Cantaert_Maurice;
 
 import domain.*;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import repository.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Component

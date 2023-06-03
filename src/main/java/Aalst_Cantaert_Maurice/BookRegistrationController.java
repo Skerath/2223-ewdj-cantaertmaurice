@@ -1,4 +1,4 @@
-package controller;
+package Aalst_Cantaert_Maurice;
 
 import domain.Author;
 import domain.Book;
