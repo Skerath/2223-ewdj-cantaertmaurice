@@ -31,7 +31,13 @@ public class SecurityConfig {
                         requests.requestMatchers("/login**").permitAll()
                                 .requestMatchers("/css/**").permitAll()
                                 .requestMatchers("/403**").permitAll()
-                                .requestMatchers("/book/**").permitAll()
+                                .requestMatchers("/book/**").permitAll() //TODO check
+                                .requestMatchers("/api/*").permitAll()
+                                .requestMatchers("/api/**").permitAll()
+                                .requestMatchers("/api/book/**").permitAll() // TODO check dit ook
+                                .requestMatchers("/api/book/*").permitAll()
+                                .requestMatchers("/api/book").permitAll()
+                                .requestMatchers("/api**").permitAll()
                                 .requestMatchers("/registerbook")
                                 .access(new WebExpressionAuthorizationManager("hasRole('ROLE_ADMIN')"))
                                 .requestMatchers("/update/*")

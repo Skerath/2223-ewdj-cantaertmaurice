@@ -48,7 +48,10 @@ import java.util.UUID;
                         "ORDER BY COUNT(fb) DESC"
         ),
         @NamedQuery(name = "Book.findAllBooksOrderedByName",
-                query = "SELECT b FROM Book b ORDER BY b.name")})
+                query = "SELECT b FROM Book b ORDER BY b.name"
+        ),
+        @NamedQuery(name = "Book.getBookFromIsbn",
+                query = "SELECT b FROM Book b WHERE b.bookId = :isbn")})
 public class Book {
 
     @Id

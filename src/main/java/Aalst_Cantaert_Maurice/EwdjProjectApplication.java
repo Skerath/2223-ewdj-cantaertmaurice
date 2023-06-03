@@ -11,6 +11,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import perform.PerformRest;
 
 import java.util.Locale;
 
@@ -20,12 +21,19 @@ import java.util.Locale;
 @ComponentScans({
         @ComponentScan("domain"),
         @ComponentScan("repository"),
+        @ComponentScan("service"),
         @ComponentScan("validator")
 })
 public class EwdjProjectApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {
         SpringApplication.run(EwdjProjectApplication.class, args);
+
+        try {
+            new PerformRest();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

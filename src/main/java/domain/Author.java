@@ -18,6 +18,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @Slf4j
+@NamedQuery(
+        name = "Author.findBooksByAuthorId",
+        query = "SELECT a.books " +
+                "FROM Author a " +
+                "WHERE authorId = :authorId"
+)
 public class Author {
 
     @Id
