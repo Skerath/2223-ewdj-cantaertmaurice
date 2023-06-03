@@ -1,39 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" th:href="@{/css/styleLogin.css}" />
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body onload='document.loginForm.username.focus();'>
 <h1>myBookService Login</h1>
 
 <div id="login-box">
 
-  <h3>Login with Username and Password</h3>
+    <h3>Login with Username and Password</h3>
 
-  <div th:if="${error}" class="error" th:text="${error}"></div>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
 
-  <div th:if="${msg}" class="msg" th:text="${msg}"></div>
+    <div th:if="${msg}" class="msg" th:text="${msg}"></div>
 
-  <form action="#" th:action="@{/login}" method="post">
-    <table>
-      <tr>
-        <td>User:</td>
-        <td><input type='text' name='username' value=''></td>
-      </tr>
-      <tr>
-        <td>Password:</td>
-        <td><input type='password' name='password' /></td>
-      </tr>
-      <tr>
-        <td colspan='2'><button name="submit" type="submit">Login</button></td>
-      </tr>
-    </table>
+    <form action="#" th:action="@{/login}" method="post">
+        <table>
+            <tr>
+                <td>User:</td>
+                <td><input type='text' name='username' value=''></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type='password' name='password'/></td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <button name="submit" type="submit" class="btn btn-primary m-3">Login</button>
+                </td>
+            </tr>
+        </table>
 
-    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 
-  </form>
+    </form>
 </div>
 
 </body>

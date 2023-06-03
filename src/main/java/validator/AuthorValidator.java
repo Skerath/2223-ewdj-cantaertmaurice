@@ -16,12 +16,6 @@ public class AuthorValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        Author registration = (Author) target;
-
-//        double price = registration.getPrice();
-//        if (price <= 0 || price >= 100) {
-//            errors.rejectValue("price", "priceValueBetween0Aand100",
-//                    "if entered, price must be above 0 and below 100 ");
-//        }
+        @Valid Author registration = (Author) target;
     }
 }

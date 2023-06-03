@@ -19,7 +19,6 @@ import validator.BookValidator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/update")
@@ -45,18 +44,18 @@ public class BookEdittingController {
     @GetMapping(value = "/{isbn13}")
     public String showUpdate(Model model,
                              @PathVariable String isbn13) {
-        try {
             if (isbn13.isBlank())
-                throw new NoSuchElementException();
-            Book toUpdateBook = bookRepository.findBookByIsbn13(isbn13); // TODO page book not found
+                return "redirect:/404";
+
+            Book toUpdateBook = bookRepository.findBookByIsbn13(isbn13);
+
+            if (toUpdateBook == null)
+                return "redirect:/404";
 
             model.addAttribute("book", toUpdateBook);
             model.addAttribute("bookLocations", toUpdateBook.getBookLocations());
             model.addAttribute("authors", toUpdateBook.getAuthors());
-            return "bookRegistrationForm";
-        } catch (NoSuchElementException exception) {
-            return "redirect:/registerbook";
-        }
+            return "bookForm";
     }
 
     @PostMapping(value = "/{isbn13}")
@@ -66,26 +65,29 @@ public class BookEdittingController {
     ) {
         if (addAuthor) {
             registration.addAuthor(new Author());
-            return "bookRegistrationForm";
+            return "bookForm";
         }
         if (addLocation) {
             registration.addBookLocation(new BookLocation());
-            return "bookRegistrationForm";
+            return "bookForm";
         }
 
-        Book toUpdateBook = bookRepository.findById(registration.getBookId()).get();
+        Book toUpdateBook = bookRepository.findById(registration.getBookId()).orElse(null);
+
+        if (toUpdateBook == null)
+            return "redirect:/404";
 
         List<BookLocation> newBookLocations = new ArrayList<>();
         List<BookLocation> existingBookLocations = new ArrayList<>();
         for (BookLocation bookLocation : registration.getBookLocations()) {
             bookLocationValidator.validate(bookLocation, result);
+            log.error(result.getAllErrors().toString());
             BookLocation correspondingLocationFromDb = bookLocationRepository.findById(bookLocation.getLocationId()).orElse(null);
             if (correspondingLocationFromDb == null) {
                 bookLocation.setBook(registration);
                 newBookLocations.add(bookLocation);
             } else {
                 existingBookLocations.add(bookLocation);
-                bookLocationRepository.save(bookLocation);
             }
         }
 
@@ -93,19 +95,25 @@ public class BookEdittingController {
         List<Author> existingAuthors = new ArrayList<>();
         for (Author author : registration.getAuthors()) {
             authorValidator.validate(author, result);
+            log.error(result.getAllErrors().toString());
             Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null);
             if (correspondingAuthorFromDb == null) {
+//                Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null); TODO
                 newAuthors.add(author);
             } else {
                 existingAuthors.add(author);
-                authorRepository.save(author);
             }
         }
 
         bookValidator.validate(registration, result);
 
+        log.error(result.getAllErrors().toString());
+
         if (result.hasErrors())
-            return "bookRegistrationForm";
+            return "bookForm";
+
+        authorRepository.saveAll(existingAuthors);
+        bookLocationRepository.saveAll(existingBookLocations);
 
         toUpdateBook.setIsbn13(registration.getIsbn13());
         toUpdateBook.setName(registration.getName());
@@ -121,6 +129,6 @@ public class BookEdittingController {
         toUpdateBook.getBookLocations().addAll(existingBookLocations);
 
         Book updatedBook = bookRepository.save(toUpdateBook);
-        return "redirect:/book/" + updatedBook.getIsbn13();
+        return "redirect:/?updated=true";
     }
 }

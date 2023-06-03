@@ -8,12 +8,12 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>HTTP Status 403 - Access is denied</h1>
+<h1>HTTP Status 404 - Not Found</h1>
 
 <form th:action="@{/logout}" method="post">
     <input th:value="#{button.logout}" type="submit" style="width: 10%" class="btn btn-primary m-3"/>
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 </form>
-<a th:href="@{/}" style="width: 10%" class="btn btn-primary">Go Home</a>
+<a th:href="@{/}" style="width: 10%" class="btn btn-primary m-3">Go Home</a>
 </body>
 </html>

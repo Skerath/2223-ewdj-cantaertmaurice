@@ -31,9 +31,7 @@ public class LoginController {
 
     @GetMapping(value = "/logout")
     public String logout(Model model) {
-
-//        model.addAttribute("book", book);
-        return "redirect:/registerbook";
+        return "redirect:/login";
     }
 
 }

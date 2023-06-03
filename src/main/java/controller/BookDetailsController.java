@@ -17,7 +17,6 @@ import repository.BookRepository;
 import repository.UserRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/book")
@@ -32,25 +31,26 @@ public class BookDetailsController {
 
     @GetMapping(value = "/{isbn13}")
     public String showBook(Model model, @PathVariable String isbn13) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // TODO remove
         Book book = bookRepository.findBookByIsbn13(isbn13);
         User authenticationUser = (User) authentication.getPrincipal();
         domain.User user = userRepository.findUserByUsername(authenticationUser.getUsername());
 
         List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        log.error(roles.toString());
         boolean isAdmin = roles.contains("ROLE_ADMIN");
 
         if (book == null)
             return "redirect:/404";
 
         boolean isFavorited = userRepository.getBookIsFavorited(book.getBookId(), user.getUserId());
+        boolean isLimited = userRepository.getFavoriteListSize(user.getUserId()) >= user.getFavoriteBooksLimit();
         int stars = bookRepository.getStarsForBook(book.getBookId());
 
         model.addAttribute("book", book);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isFavorited", isFavorited);
         model.addAttribute("stars", stars);
+        model.addAttribute("isLimited", isLimited && !isFavorited);
         return "bookDetails";
     }
 
@@ -60,29 +60,20 @@ public class BookDetailsController {
         Book book = bookRepository.findBookByIsbn13(isbn13);
         User authenticationUser = (User) authentication.getPrincipal();
         domain.User user = userRepository.findUserByUsername(authenticationUser.getUsername());
-        log.error("ping");
 
         if (book == null)
             return "redirect:/404";
 
         boolean isFavorited = userRepository.getBookIsFavorited(book.getBookId(), user.getUserId());
-        log.error(String.valueOf(isFavorited));
 
         if (isFavorited)
             user.removeFavouriteBook(book);
-        else if (userRepository.getFavoriteListSize(user.getUserId()) < user.getFavoriteBooksLimit())
+        else
             user.addFavouriteBook(book);
-        else {
-            model.addAttribute("book", book);
-            model.addAttribute("isAdmin", false);
-            model.addAttribute("isFavorited", false);
-            model.addAttribute("isLimited", true);
-            return "bookDetails";
-        }
 
         userRepository.save(user);
 
-        return "redirect:/book/" + book.getIsbn13();
+        return "redirect:/?success=" + !isFavorited;
     }
 
 }

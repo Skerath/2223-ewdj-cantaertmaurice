@@ -44,7 +44,7 @@ public class BookRegistrationController {
         model.addAttribute("book", toAddBook);
         model.addAttribute("bookLocations", toAddBook.getBookLocations());
         model.addAttribute("authors", toAddBook.getAuthors());
-        return "bookRegistrationForm";
+        return "bookForm";
     }
 
     @PostMapping()
@@ -53,11 +53,11 @@ public class BookRegistrationController {
                                       @RequestParam(value = "addLocation", required = false) boolean addLocation) {
         if (addAuthor) {
             registration.addAuthor(new Author());
-            return "bookRegistrationForm";
+            return "bookForm";
         }
         if (addLocation) {
             registration.addBookLocation(new BookLocation());
-            return "bookRegistrationForm";
+            return "bookForm";
         }
 
         for (BookLocation bookLocation : registration.getBookLocations()) {
@@ -72,7 +72,7 @@ public class BookRegistrationController {
         bookValidator.validate(registration, result);
 
         if (result.hasErrors())
-            return "bookRegistrationForm";
+            return "bookForm";
 
         authorRepository.saveAll(registration.getAuthors());
         bookRepository.save(registration);

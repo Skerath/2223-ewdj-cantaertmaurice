@@ -1,74 +1,81 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="ISO-8859-1">
     <title th:text="#{page.addbook.title}"></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body class="ml-4 mr-4">
 <form th:action="@{/logout}" method="post">
-    <input th:value="#{button.logout}" type="submit" />
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input th:value="#{button.logout}" type="submit" style="width: 10%" class="btn btn-primary m-3"/>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 </form>
+<a th:href="@{/}" th:text="#{page.addbook.button.gohome}" style="width: 10%" class="btn btn-primary m-3"></a>
 <h1 th:text="#{page.addbook.heading.page}"></h1>
 <form id="book-form" th:object="${book}" method="post">
-    <input type="hidden" th:field="*{bookId}" />
+    <input type="hidden" th:field="*{bookId}"/>
     <p>
         <label th:text="#{page.addbook.label.book.name}"></label>
         <input type="text" th:field="*{name}" size="15"/>
-        <span th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></span>
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
     </p>
     <p>
         <label th:text="#{page.addbook.label.book.isbn13}"></label>
         <input type="text" th:field="*{isbn13}" size="15"/>
-        <span th:if="${#fields.hasErrors('isbn13')}" th:errorclass="error" th:errors="*{isbn13}"></span>
+        <span th:if="${#fields.hasErrors('isbn13')}" th:errors="*{isbn13}"></span>
     </p>
     <p>
         <label th:text="#{page.addbook.label.book.price}"></label>
         <input type="number" th:field="*{priceInEuro}" step="0.01" onchange="formatInput(this)" size="15"/>
-        <span th:if="${#fields.hasErrors('priceInEuro')}" th:errorclass="error" th:errors="*{priceInEuro}"></span>
+        <span th:if="${#fields.hasErrors('priceInEuro')}" th:errors="*{priceInEuro}"></span>
     </p>
     <div th:each="location, status : *{bookLocations}">
-        <input type="hidden" th:field="*{bookLocations[__${status.index}__].locationId}" />
-        <input type="hidden" th:field="*{bookLocations[__${status.index}__].book}" />
+        <input type="hidden" th:field="*{bookLocations[__${status.index}__].locationId}"/>
+        <input type="hidden" th:field="*{bookLocations[__${status.index}__].book}"/>
         <p>
             <label th:text="#{page.addbook.label.bookLocation.locationName}"></label>
             <input type="text" th:field="*{bookLocations[__${status.index}__].locationName}"/>
-            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].locationName')}" th:errorclass="error"
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].locationName')}"
                   th:errors="*{bookLocations[__${status.index}__].locationName}"></span>
         </p>
         <p>
             <label th:text="#{page.addbook.label.bookLocation.placeCode1}"></label>
             <input type="number" th:field="*{bookLocations[__${status.index}__].placeCode1}"/>
-            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode1')}" th:errorclass="error"
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode1')}"
                   th:errors="*{bookLocations[__${status.index}__].placeCode1}"></span>
         </p>
         <p>
             <label th:text="#{page.addbook.label.bookLocation.placeCode2}"></label>
             <input type="number" th:field="*{bookLocations[__${status.index}__].placeCode2}"/>
-            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode2')}" th:errorclass="error"
+            <span th:if="${#fields.hasErrors('bookLocations[__${status.index}__].placeCode2')}"
                   th:errors="*{bookLocations[__${status.index}__].placeCode2}"></span>
         </p>
     </div>
     <div th:each="author, status : *{authors}">
-        <input type="hidden" th:field="*{authors[__${status.index}__].authorId}" />
+        <input type="hidden" th:field="*{authors[__${status.index}__].authorId}"/>
         <p>
             <label th:text="#{page.addbook.label.author.lastName}"></label>
             <input type="text" th:field="*{authors[__${status.index}__].lastName}"/>
-            <span th:if="${#fields.hasErrors('authors[__${status.index}__].lastName')}" th:errorclass="error"
+            <span th:if="${#fields.hasErrors('authors[__${status.index}__].lastName')}"
                   th:errors="*{authors[__${status.index}__].lastName}"></span>
         </p>
         <p>
             <label th:text="#{page.addbook.label.author.firstName}"></label>
             <input type="text" th:field="*{authors[__${status.index}__].firstName}"/>
-            <span th:if="${#fields.hasErrors('authors[__${status.index}__].firstName')}" th:errorclass="error"
+            <span th:if="${#fields.hasErrors('authors[__${status.index}__].firstName')}"
                   th:errors="*{authors[__${status.index}__].firstName}"></span>
         </p>
     </div>
     <button th:text="#{page.addbook.button.addAuthor}" type="button" id="add-author-button"
+            class="btn btn-primary m-3" style="width: 10%"
             onclick="addAuthorRow()"></button>
     <button th:text="#{page.addbook.button.addLocation}" type="button" id="add-location-button"
+            class="btn btn-primary m-3" style="width: 10%"
             onclick="addLocationRow()"></button>
-    <button th:text="#{page.addbook.button.submit}" type="submit"></button>
+    <button th:text="#{page.addbook.button.submit}" type="submit" style="width: 10%"
+            class="btn btn-primary m-3"></button>
     <input type="hidden" name="addAuthor" id="addAuthorInput"/>
     <input type="hidden" name="addLocation" id="addLocationInput"/>
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
