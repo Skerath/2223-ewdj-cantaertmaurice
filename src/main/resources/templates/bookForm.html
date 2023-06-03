@@ -34,6 +34,10 @@
     <div th:each="location, status : *{bookLocations}">
         <input type="hidden" th:field="*{bookLocations[__${status.index}__].locationId}"/>
         <input type="hidden" th:field="*{bookLocations[__${status.index}__].book}"/>
+        <button th:text="#{page.addbook.button.removeLocation}" type="button" id="remove-location-button"
+                class="btn btn-primary m-3" style="width: 10%"
+                th:attr="onclick=|removeLocationRow(${status.index})|"></button>
+        <p>
         <p>
             <label th:text="#{page.addbook.label.bookLocation.locationName}"></label>
             <input type="text" th:field="*{bookLocations[__${status.index}__].locationName}"/>
@@ -55,6 +59,9 @@
     </div>
     <div th:each="author, status : *{authors}">
         <input type="hidden" th:field="*{authors[__${status.index}__].authorId}"/>
+        <button th:text="#{page.addbook.button.removeAuthor}" type="button" id="remove-author-button"
+                class="btn btn-primary m-3" style="width: 10%"
+                th:attr="onclick=|removeAuthorRow(${status.index})|"></button>
         <p>
             <label th:text="#{page.addbook.label.author.lastName}"></label>
             <input type="text" th:field="*{authors[__${status.index}__].lastName}"/>
@@ -78,6 +85,8 @@
             class="btn btn-primary m-3"></button>
     <input type="hidden" name="addAuthor" id="addAuthorInput"/>
     <input type="hidden" name="addLocation" id="addLocationInput"/>
+    <input type="hidden" name="removeAuthor" id="removeAuthorInput"/>
+    <input type="hidden" name="removeLocation" id="removeLocationInput"/>
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     <div th:if="${#fields.hasErrors()}" class="error">
         <h3 th:text="#{page.addbook.heading.error}"></h3>
@@ -98,6 +107,7 @@
 
     }
 
+
     function formatInput(input) {
         const value = input.value;
         const formattedValue = parseFloat(value).toFixed(2);
@@ -111,6 +121,9 @@
 
     document.getElementById('addAuthorInput').value = false;
     document.getElementById('addLocationInput').value = false;
+    document.getElementById('removeAuthorInput').value = null;
+    document.getElementById('removeLocationInput').value = null;
+
 
     let authorCount = [[${book.authors.size()}]];
     if (authorCount >= 3)
@@ -119,6 +132,16 @@
     let locationCount = [[${book.bookLocations.size()}]];
     if (locationCount >= 3)
         document.getElementById("add-location-button").style.display = "none";
+
+    function removeAuthorRow(int) {
+        document.getElementById('removeAuthorInput').value = int;
+        document.getElementById('book-form').submit();
+    }
+
+    function removeLocationRow(int) {
+        document.getElementById('removeLocationInput').value = int;
+        document.getElementById('book-form').submit();
+    }
 </script>
 </body>
 </html>

@@ -61,7 +61,9 @@ public class BookEdittingController {
     @PostMapping(value = "/{isbn13}")
     public String updateRegistration(@Valid Book registration, BindingResult result,
                                      @RequestParam(value = "addAuthor", required = false) boolean addAuthor,
-                                     @RequestParam(value = "addLocation", required = false) boolean addLocation
+                                     @RequestParam(value = "addLocation", required = false) boolean addLocation,
+                                     @RequestParam(value = "removeAuthor", required = false) Integer authorNumber,
+                                     @RequestParam(value = "removeLocation", required = false) Integer locationNumber
     ) {
         if (addAuthor) {
             registration.addAuthor(new Author());
@@ -69,6 +71,16 @@ public class BookEdittingController {
         }
         if (addLocation) {
             registration.addBookLocation(new BookLocation());
+            return "bookForm";
+        }
+
+        if (authorNumber != null) {
+            registration.removeAuthor(registration.getAuthors().get(authorNumber));
+            return "bookForm";
+        }
+
+        if (locationNumber != null) {
+            registration.removeBookLocation(registration.getBookLocations().get(locationNumber));
             return "bookForm";
         }
 
@@ -81,7 +93,6 @@ public class BookEdittingController {
         List<BookLocation> existingBookLocations = new ArrayList<>();
         for (BookLocation bookLocation : registration.getBookLocations()) {
             bookLocationValidator.validate(bookLocation, result);
-            log.error(result.getAllErrors().toString());
             BookLocation correspondingLocationFromDb = bookLocationRepository.findById(bookLocation.getLocationId()).orElse(null);
             if (correspondingLocationFromDb == null) {
                 bookLocation.setBook(registration);
@@ -95,10 +106,8 @@ public class BookEdittingController {
         List<Author> existingAuthors = new ArrayList<>();
         for (Author author : registration.getAuthors()) {
             authorValidator.validate(author, result);
-            log.error(result.getAllErrors().toString());
             Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null);
             if (correspondingAuthorFromDb == null) {
-//                Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null); TODO
                 newAuthors.add(author);
             } else {
                 existingAuthors.add(author);
@@ -107,7 +116,6 @@ public class BookEdittingController {
 
         bookValidator.validate(registration, result);
 
-        log.error(result.getAllErrors().toString());
 
         if (result.hasErrors())
             return "bookForm";
