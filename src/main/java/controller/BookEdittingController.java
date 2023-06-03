@@ -19,6 +19,7 @@ import validator.AuthorValidator;
 import validator.BookLocationValidator;
 import validator.BookValidator;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,5 +147,10 @@ public class BookEdittingController {
 
         Book updatedBook = bookRepository.save(toUpdateBook);
         return "redirect:/?updated=true";
+    }
+
+    @ModelAttribute("username")
+    public String username(Principal principal) {
+        return principal.getName();
     }
 }

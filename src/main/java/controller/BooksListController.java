@@ -73,4 +73,9 @@ public class BooksListController {
         model.addAttribute("isAdmin", isAdmin);
         return "booksList";
     }
+
+    @ModelAttribute("username")
+    public String username(Principal principal) {
+        return principal.getName();
+    }
 }

@@ -19,6 +19,7 @@ import validator.AuthorValidator;
 import validator.BookLocationValidator;
 import validator.BookValidator;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -101,5 +102,10 @@ public class BookRegistrationController { // TODO merge this with editting
         bookLocationRepository.saveAll(registration.getBookLocations());
 
         return "redirect:/book/" + registration.getIsbn13();
+    }
+
+    @ModelAttribute("username")
+    public String username(Principal principal) {
+        return principal.getName();
     }
 }
