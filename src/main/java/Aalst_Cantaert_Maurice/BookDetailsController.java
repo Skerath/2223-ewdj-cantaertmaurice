@@ -33,9 +33,6 @@ public class BookDetailsController {
         User authenticationUser = (User) authentication.getPrincipal();
         domain.User user = userRepository.findUserByUsername(authenticationUser.getUsername());
 
-        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        boolean isAdmin = roles.contains("ROLE_ADMIN");
-
         if (book == null)
             return "redirect:/404";
 
@@ -44,7 +41,6 @@ public class BookDetailsController {
         int stars = bookRepository.getStarsForBook(book.getBookId());
 
         model.addAttribute("book", book);
-        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isFavorited", isFavorited);
         model.addAttribute("stars", stars);
         model.addAttribute("isLimited", isLimited && !isFavorited);
@@ -76,5 +72,10 @@ public class BookDetailsController {
     @ModelAttribute("username")
     public String username(Principal principal) {
         return principal.getName();
+    }
+
+    @ModelAttribute("isAdmin")
+    public Boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN");
     }
 }

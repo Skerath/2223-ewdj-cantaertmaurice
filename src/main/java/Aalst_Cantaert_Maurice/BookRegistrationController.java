@@ -60,11 +60,7 @@ public class BookRegistrationController { // TODO merge this with editting
                                       @RequestParam(value = "addAuthor", required = false) boolean addAuthor,
                                       @RequestParam(value = "addLocation", required = false) boolean addLocation,
                                       @RequestParam(value = "removeAuthor", required = false) Integer authorNumber,
-                                      @RequestParam(value = "removeLocation", required = false) Integer locationNumber,
-                                      Authentication authentication,
-                                      Model model) {
-        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        model.addAttribute("isAdmin", roles.contains("ROLE_ADMIN"));
+                                      @RequestParam(value = "removeLocation", required = false) Integer locationNumber) {
         if (addAuthor) {
             registration.addAuthor(new Author());
             return "bookForm";
@@ -121,7 +117,6 @@ public class BookRegistrationController { // TODO merge this with editting
         model.addAttribute("book", toUpdateBook);
         model.addAttribute("bookLocations", toUpdateBook.getBookLocations());
         model.addAttribute("authors", toUpdateBook.getAuthors());
-        model.addAttribute("isAdmin", roles.contains("ROLE_ADMIN"));
         return "bookForm";
     }
 
@@ -130,11 +125,7 @@ public class BookRegistrationController { // TODO merge this with editting
                                      @RequestParam(value = "addAuthor", required = false) boolean addAuthor,
                                      @RequestParam(value = "addLocation", required = false) boolean addLocation,
                                      @RequestParam(value = "removeAuthor", required = false) Integer authorNumber,
-                                     @RequestParam(value = "removeLocation", required = false) Integer locationNumber,
-                                     Authentication authentication,
-                                     Model model) {
-        model.addAttribute("isAdmin", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN"));
-
+                                     @RequestParam(value = "removeLocation", required = false) Integer locationNumber) {
         if (addAuthor) {
             registration.addAuthor(new Author());
             return "bookForm";
@@ -178,10 +169,8 @@ public class BookRegistrationController { // TODO merge this with editting
             authorValidator.validate(author, result);
             Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null);
             if (correspondingAuthorFromDb == null) {
-                log.error("aaaaaa");
                 newAuthors.add(author);
             } else {
-                log.error("bbbbbbbbbbbb");
                 existingAuthors.add(author);
             }
         }
@@ -215,5 +204,10 @@ public class BookRegistrationController { // TODO merge this with editting
     @ModelAttribute("username")
     public String username(Principal principal) {
         return principal.getName();
+    }
+
+    @ModelAttribute("isAdmin")
+    public Boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN");
     }
 }

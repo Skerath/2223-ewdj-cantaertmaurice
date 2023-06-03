@@ -32,11 +32,7 @@ public class BooksListController {
     @GetMapping
     public String showBooks(@RequestParam(value = "success", required = false) Boolean gotAdded,
                             @RequestParam(value = "updated", required = false) Boolean gotUpdated,
-                            Model model,
-                            Authentication authentication) {
-        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        boolean isAdmin = roles.contains("ROLE_ADMIN");
-
+                            Model model) {
         Iterable<Book> books = bookRepository.findAllBooksOrderedByName();
         Map<UUID, Long> starsPerBook = bookRepository.getStarsForBooks().
                 stream()
@@ -50,14 +46,11 @@ public class BooksListController {
             model.addAttribute("gotUpdated", "Book has been updated.");
         model.addAttribute("booksList", books);
         model.addAttribute("starsPerBook", starsPerBook);
-        model.addAttribute("isAdmin", isAdmin);
         return "booksList";
     }
 
     @GetMapping(value = "/popular")
-    public String showPopularBooks(Model model, Authentication authentication) {
-        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        boolean isAdmin = roles.contains("ROLE_ADMIN");
+    public String showPopularBooks(Model model) {
         Iterable<Book> books = bookRepository.findAllBooksOrderedByName();
         Map<UUID, Long> starsPerBook = bookRepository.getStarsForBooks()
                 .stream()
@@ -70,12 +63,16 @@ public class BooksListController {
                 .toList();
         model.addAttribute("booksList", sortedBooks);
         model.addAttribute("starsPerBook", starsPerBook);
-        model.addAttribute("isAdmin", isAdmin);
         return "booksList";
     }
 
     @ModelAttribute("username")
     public String username(Principal principal) {
         return principal.getName();
+    }
+
+    @ModelAttribute("isAdmin")
+    public Boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN");
     }
 }
