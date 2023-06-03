@@ -39,15 +39,6 @@ import java.util.UUID;
                         "JOIN u.favoriteBooks fb " +
                         "WHERE fb.bookId = :bookId"
         ),
-        @NamedQuery(
-                name = "Book.getBooksWithFavoriteCount",
-                query = "SELECT b, COUNT(fb) " +
-                        "FROM Book b " +
-                        "JOIN User u " +
-                        "JOIN u.favoriteBooks fb " +
-                        "GROUP BY b " +
-                        "ORDER BY COUNT(fb) DESC"
-        ),
         @NamedQuery(name = "Book.findAllBooksOrderedByName",
                 query = "SELECT b FROM Book b ORDER BY b.name"
         ),

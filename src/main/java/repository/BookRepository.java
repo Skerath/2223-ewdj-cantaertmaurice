@@ -19,7 +19,5 @@ public interface BookRepository extends CrudRepository<Book, UUID> {
 
     List<Book> findAllBooksOrderedByName();
 
-//    List<Object[]> getBooksWithFavoriteCount(); TODO
-
     List<Book> findBooksByAuthorName(@Param("authorName") String authorName);
 }
