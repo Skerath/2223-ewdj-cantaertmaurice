@@ -1,6 +1,7 @@
 package validator;
 
 import domain.Book;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class BookValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        Book registration = (Book) target;
+        @Valid Book registration = (Book) target;
 
         String isbn13 = filterISBN13(registration.getIsbn13());
 

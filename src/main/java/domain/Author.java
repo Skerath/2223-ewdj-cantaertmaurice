@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +47,13 @@ public class Author {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Author author = (Author) o;
-        return authorId.equals(author.authorId);
+        return getAuthorId() != null && Objects.equals(getAuthorId(), author.getAuthorId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(authorId);
+        return getClass().hashCode();
     }
 }
