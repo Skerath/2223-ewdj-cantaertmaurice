@@ -3,6 +3,8 @@ package domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @ToString
+@Slf4j
 public class Author {
 
     @Id
@@ -46,11 +49,11 @@ public class Author {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Author author = (Author) o;
-        return firstName.equals(author.firstName) && lastName.equals(author.lastName);
+        return authorId.equals(author.authorId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName);
+        return Objects.hash(authorId);
     }
 }

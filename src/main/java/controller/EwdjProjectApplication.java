@@ -22,7 +22,6 @@ import java.util.Locale;
 @EnableJpaRepositories(basePackages = {"repository"})
 @EntityScan(basePackages = {"domain"})
 @ComponentScans({
-//        @ComponentScan("service"),
         @ComponentScan("domain"),
         @ComponentScan("repository"),
         @ComponentScan("validator")
@@ -44,21 +43,5 @@ public class EwdjProjectApplication implements WebMvcConfigurer {
         slr.setDefaultLocale(Locale.ENGLISH);
         return slr;
     }
-//
-//    @Bean
-//    BookValidator bookValidator() {
-//        return new BookValidator();
-//    }
-//
-//    @Bean
-//    BookLocationValidator bookLocationValidator() {
-//        return new BookLocationValidator();
-//    }
-//
-//    @Bean
-//    AuthorValidator authorValidator() {
-//        return new AuthorValidator();
-//    }
-
 }
 
