@@ -76,14 +76,10 @@ public class User implements UserDetails {
     }
 
     public void addFavouriteBook(Book book) {
-        if (getFavoriteBooks().size() == favoriteBooksLimit) // TODO custom exception & external validator
-            throw new IllegalArgumentException(String.format("too many books, %d/%d ", getFavoriteBooks().size(), favoriteBooksLimit));
         getFavoriteBooks().add(book);
     }
 
     public void removeFavouriteBook(Book book) {
-        if (!getFavoriteBooks().contains(book)) // TODO custom exception & external validator
-            throw new IllegalArgumentException("book wasn't in favourites");
         getFavoriteBooks().remove(book);
     }
 

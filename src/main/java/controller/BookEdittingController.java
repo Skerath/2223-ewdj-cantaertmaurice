@@ -6,6 +6,8 @@ import domain.BookLocation;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,7 +45,9 @@ public class BookEdittingController {
 
     @GetMapping(value = "/{isbn13}")
     public String showUpdate(Model model,
-                             @PathVariable String isbn13) {
+                             @PathVariable String isbn13,
+                             Authentication authentication) {
+        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         if (isbn13.isBlank())
             return "redirect:/404";
 
@@ -55,6 +59,7 @@ public class BookEdittingController {
         model.addAttribute("book", toUpdateBook);
         model.addAttribute("bookLocations", toUpdateBook.getBookLocations());
         model.addAttribute("authors", toUpdateBook.getAuthors());
+        model.addAttribute("isAdmin", roles.contains("ROLE_ADMIN"));
         return "bookForm";
     }
 
@@ -63,8 +68,11 @@ public class BookEdittingController {
                                      @RequestParam(value = "addAuthor", required = false) boolean addAuthor,
                                      @RequestParam(value = "addLocation", required = false) boolean addLocation,
                                      @RequestParam(value = "removeAuthor", required = false) Integer authorNumber,
-                                     @RequestParam(value = "removeLocation", required = false) Integer locationNumber
-    ) {
+                                     @RequestParam(value = "removeLocation", required = false) Integer locationNumber,
+                                     Authentication authentication,
+                                     Model model) {
+        model.addAttribute("isAdmin", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN"));
+
         if (addAuthor) {
             registration.addAuthor(new Author());
             return "bookForm";

@@ -30,8 +30,7 @@ public class BookDetailsController {
     UserRepository userRepository;
 
     @GetMapping(value = "/{isbn13}")
-    public String showBook(Model model, @PathVariable String isbn13) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // TODO remove
+    public String showBook(Model model, @PathVariable String isbn13, Authentication authentication) {
         Book book = bookRepository.findBookByIsbn13(isbn13);
         User authenticationUser = (User) authentication.getPrincipal();
         domain.User user = userRepository.findUserByUsername(authenticationUser.getUsername());
