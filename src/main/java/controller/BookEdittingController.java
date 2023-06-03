@@ -44,18 +44,18 @@ public class BookEdittingController {
     @GetMapping(value = "/{isbn13}")
     public String showUpdate(Model model,
                              @PathVariable String isbn13) {
-            if (isbn13.isBlank())
-                return "redirect:/404";
+        if (isbn13.isBlank())
+            return "redirect:/404";
 
-            Book toUpdateBook = bookRepository.findBookByIsbn13(isbn13);
+        Book toUpdateBook = bookRepository.findBookByIsbn13(isbn13);
 
-            if (toUpdateBook == null)
-                return "redirect:/404";
+        if (toUpdateBook == null)
+            return "redirect:/404";
 
-            model.addAttribute("book", toUpdateBook);
-            model.addAttribute("bookLocations", toUpdateBook.getBookLocations());
-            model.addAttribute("authors", toUpdateBook.getAuthors());
-            return "bookForm";
+        model.addAttribute("book", toUpdateBook);
+        model.addAttribute("bookLocations", toUpdateBook.getBookLocations());
+        model.addAttribute("authors", toUpdateBook.getAuthors());
+        return "bookForm";
     }
 
     @PostMapping(value = "/{isbn13}")

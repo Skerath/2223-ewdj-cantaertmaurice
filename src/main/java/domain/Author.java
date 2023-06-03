@@ -3,8 +3,6 @@ package domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @ToString
-@Slf4j
 public class Author {
 
     @Id
@@ -37,16 +34,6 @@ public class Author {
     private List<Book> books = new ArrayList<>();
 
     public void addBook(Book newBook) {
-//        boolean updated = true;
-//        for (int i = 0; i < books.size(); i++) {
-//            if (books.get(i).equals(newBook)) {
-//                log.error("ping");
-//                books.set(i, newBook);
-//                updated = false;
-//                break;
-//            }
-//        }
-//        if (!updated)
             books.add(newBook);
     }
 
@@ -57,13 +44,13 @@ public class Author {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Author author = (Author) o;
-        return getAuthorId() != null && Objects.equals(getAuthorId(), author.getAuthorId());
+        return firstName.equals(author.firstName) && lastName.equals(author.lastName);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(firstName, lastName);
     }
 }
