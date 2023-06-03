@@ -123,7 +123,10 @@ public class BookRegistrationController {
                 bookLocation.setBook(registration);
                 newBookLocations.add(bookLocation);
             } else {
-                existingBookLocations.add(bookLocation);
+                correspondingLocationFromDb.setLocationName(bookLocation.getLocationName());
+                correspondingLocationFromDb.setPlaceCode1(bookLocation.getPlaceCode1());
+                correspondingLocationFromDb.setPlaceCode2(bookLocation.getPlaceCode2());
+                existingBookLocations.add(correspondingLocationFromDb);
             }
         }
 
@@ -134,7 +137,10 @@ public class BookRegistrationController {
             Author correspondingAuthorFromDb = authorRepository.findById(author.getAuthorId()).orElse(null);
             if (correspondingAuthorFromDb == null) {
                 newAuthors.add(author);
+                author.addBook(toUpdateBook);
             } else {
+                correspondingAuthorFromDb.setFirstName(author.getFirstName());
+                correspondingAuthorFromDb.setLastName(author.getLastName());
                 existingAuthors.add(author);
             }
         }
@@ -150,18 +156,21 @@ public class BookRegistrationController {
 
         toUpdateBook.setIsbn13(registration.getIsbn13());
         toUpdateBook.setName(registration.getName());
+        toUpdateBook.setPriceInEuro(registration.getPriceInEuro());
 
         toUpdateBook.getAuthors().clear();
-        authorRepository.saveAll(newAuthors);
         toUpdateBook.getAuthors().addAll(newAuthors);
         toUpdateBook.getAuthors().addAll(existingAuthors);
 
         toUpdateBook.getBookLocations().clear();
-        bookLocationRepository.saveAll(newBookLocations);
         toUpdateBook.getBookLocations().addAll(newBookLocations);
         toUpdateBook.getBookLocations().addAll(existingBookLocations);
 
+        authorRepository.saveAll(newAuthors);
+        bookLocationRepository.saveAll(newBookLocations);
+
         bookRepository.save(toUpdateBook);
+
         return "redirect:/?updated=true";
     }
 

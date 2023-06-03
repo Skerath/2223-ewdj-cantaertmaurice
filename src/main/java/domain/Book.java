@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.util.ProxyUtils;
+import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -103,7 +103,7 @@ public class Book implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || ProxyUtils.getUserClass(this) != ProxyUtils.getUserClass(o)) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Book book = (Book) o;
         return getBookId() != null && Objects.equals(getBookId(), book.getBookId());
     }
