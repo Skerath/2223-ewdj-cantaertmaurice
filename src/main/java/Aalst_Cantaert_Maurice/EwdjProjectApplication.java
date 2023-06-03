@@ -39,6 +39,7 @@ public class EwdjProjectApplication implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/403").setViewName("403");
+        registry.addViewController("/404").setViewName("404");
     }
 
     @Bean

@@ -26,7 +26,7 @@ import java.util.List;
 @Controller
 @RequestMapping
 @Slf4j
-public class BookRegistrationController { // TODO merge this with editting
+public class BookRegistrationController {
     @Autowired
     private BookLocationRepository bookLocationRepository;
     @Autowired
@@ -44,14 +44,12 @@ public class BookRegistrationController { // TODO merge this with editting
     private AuthorValidator authorValidator;
 
     @GetMapping(value = "/registerbook")
-    public String showRegistration(Model model, @ModelAttribute("bookId") String uuid, Authentication authentication) {
-        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+    public String showRegistration(Model model, @ModelAttribute("bookId") String uuid) {
         Book toAddBook = new Book();
 
         model.addAttribute("book", toAddBook);
         model.addAttribute("bookLocations", toAddBook.getBookLocations());
         model.addAttribute("authors", toAddBook.getAuthors());
-        model.addAttribute("isAdmin", roles.contains("ROLE_ADMIN"));
         return "bookForm";
     }
 
@@ -61,24 +59,8 @@ public class BookRegistrationController { // TODO merge this with editting
                                       @RequestParam(value = "addLocation", required = false) boolean addLocation,
                                       @RequestParam(value = "removeAuthor", required = false) Integer authorNumber,
                                       @RequestParam(value = "removeLocation", required = false) Integer locationNumber) {
-        if (addAuthor) {
-            registration.addAuthor(new Author());
-            return "bookForm";
-        }
-        if (addLocation) {
-            registration.addBookLocation(new BookLocation());
-            return "bookForm";
-        }
-
-        if (authorNumber != null) {
-            registration.removeAuthor(registration.getAuthors().get(authorNumber));
-            return "bookForm";
-        }
-
-        if (locationNumber != null) {
-            registration.removeBookLocation(registration.getBookLocations().get(locationNumber));
-            return "bookForm";
-        }
+        boolean newRequest = parseRequests(registration, addAuthor, addLocation, authorNumber, locationNumber);
+        if (newRequest) return "bookForm";
 
         for (BookLocation bookLocation : registration.getBookLocations()) {
             bookLocationValidator.validate(bookLocation, result);
@@ -103,9 +85,7 @@ public class BookRegistrationController { // TODO merge this with editting
 
     @GetMapping(value = "/update/{isbn13}")
     public String showUpdate(Model model,
-                             @PathVariable String isbn13,
-                             Authentication authentication) {
-        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+                             @PathVariable String isbn13) {
         if (isbn13.isBlank())
             return "redirect:/404";
 
@@ -126,24 +106,8 @@ public class BookRegistrationController { // TODO merge this with editting
                                      @RequestParam(value = "addLocation", required = false) boolean addLocation,
                                      @RequestParam(value = "removeAuthor", required = false) Integer authorNumber,
                                      @RequestParam(value = "removeLocation", required = false) Integer locationNumber) {
-        if (addAuthor) {
-            registration.addAuthor(new Author());
-            return "bookForm";
-        }
-        if (addLocation) {
-            registration.addBookLocation(new BookLocation());
-            return "bookForm";
-        }
-
-        if (authorNumber != null) {
-            registration.removeAuthor(registration.getAuthors().get(authorNumber));
-            return "bookForm";
-        }
-
-        if (locationNumber != null) {
-            registration.removeBookLocation(registration.getBookLocations().get(locationNumber));
-            return "bookForm";
-        }
+        boolean newRequest = parseRequests(registration, addAuthor, addLocation, authorNumber, locationNumber);
+        if (newRequest) return "bookForm";
 
         Book toUpdateBook = bookRepository.findById(registration.getBookId()).orElse(null);
 
@@ -197,8 +161,30 @@ public class BookRegistrationController { // TODO merge this with editting
         toUpdateBook.getBookLocations().addAll(newBookLocations);
         toUpdateBook.getBookLocations().addAll(existingBookLocations);
 
-        Book updatedBook = bookRepository.save(toUpdateBook);
+        bookRepository.save(toUpdateBook);
         return "redirect:/?updated=true";
+    }
+
+    private static boolean parseRequests(Book registration, boolean addAuthor, boolean addLocation, Integer authorNumber, Integer locationNumber) {
+        if (addAuthor) {
+            registration.addAuthor(new Author());
+            return true;
+        }
+        if (addLocation) {
+            registration.addBookLocation(new BookLocation());
+            return true;
+        }
+
+        if (authorNumber != null) {
+            registration.removeAuthor(registration.getAuthors().get(authorNumber));
+            return true;
+        }
+
+        if (locationNumber != null) {
+            registration.removeBookLocation(registration.getBookLocations().get(locationNumber));
+            return true;
+        }
+        return false;
     }
 
     @ModelAttribute("username")
