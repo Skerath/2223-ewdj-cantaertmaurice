@@ -25,8 +25,14 @@ public class BookValidator implements Validator {
         Book registration = (Book) target;
 
         String isbn13 = filterISBN13(registration.getIsbn13());
+
+        if (isbn13.length() != 13) {
+            errors.rejectValue("isbn13", "validation.book.isbn13.InvalidFormat",
+                    "Given ISBN13 had an invalid format");
+            return;
+        }
         if (!validateChecksum(isbn13)) {
-            errors.rejectValue("isbn13", "validation.book.isbn13.Invalid",
+            errors.rejectValue("isbn13", "validation.book.isbn13.InvalidCode",
                     "Given ISBN13 was an invalid code");
             return;
         }
@@ -42,7 +48,7 @@ public class BookValidator implements Validator {
     }
 
     private String filterISBN13(String isbn) {
-        return isbn.replaceAll("[^\\d]", ""); // TODO na testen: can be simplified
+        return isbn.replaceAll("[^\\d]", "");
     }
 
     private boolean validateChecksum(String isbn) {
