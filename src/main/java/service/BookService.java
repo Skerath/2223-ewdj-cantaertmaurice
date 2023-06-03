@@ -1,12 +1,12 @@
 package service;
 
-import domain.Book;
+import dto.BookDTO;
 
 import java.util.List;
 
 public interface BookService {
 
-    List<Book> getBooksFromAuthor(String authorId);
+    List<BookDTO> getBooksFromAuthorName(String authorId);
 
-    Book getBookFromIsbn(String isbn);
+    BookDTO getBookFromIsbn(String isbn);
 }

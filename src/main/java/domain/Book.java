@@ -10,6 +10,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.ProxyUtils;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +52,14 @@ import java.util.UUID;
                 query = "SELECT b FROM Book b ORDER BY b.name"
         ),
         @NamedQuery(name = "Book.getBookFromIsbn",
-                query = "SELECT b FROM Book b WHERE b.bookId = :isbn")})
-public class Book {
+                query = "SELECT b FROM Book b WHERE b.bookId = :isbn"),
+        @NamedQuery(
+                name = "Book.findBooksByAuthorName",
+                query = "SELECT a.books " +
+                        "FROM Author a " +
+                        "WHERE CONCAT(a.firstName, ' ', a.lastName) = :authorName"
+        )})
+public class Book implements Serializable {
 
     @Id
     @Column(name = "book_id", nullable = false)

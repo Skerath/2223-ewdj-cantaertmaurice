@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @Slf4j
-@NamedQuery(
-        name = "Author.findBooksByAuthorId",
-        query = "SELECT a.books " +
-                "FROM Author a " +
-                "WHERE authorId = :authorId"
-)
 public class Author {
 
     @Id

@@ -14,7 +14,7 @@ public class RestErrorAdvice {
     @ResponseBody
     @ExceptionHandler(BookNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String bookNotFoundHandler(AuthorNotFoundException ex) {
+    String bookNotFoundHandler(BookNotFoundException ex) {
         return ex.getMessage();
     }
 
